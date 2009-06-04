@@ -1,0 +1,46 @@
+Instructions for the src/ subdirectory
+--------------------------------------
+
+SOURCE CODE TO PRIVATE ENVIRONMENT:
+Put one or several R source code files in this directory. 
+All R files will be read in lexical (alphabetic) order, 
+that is, source():d, into the private working environment 
+before a Job object runs the job. If subdirectories exists, they 
+are recursively scanned for R files.
+
+All files ending with .R will be sourced. Files ending with .R.lnk
+or .R.LNK are treated as Windows shortcuts and their targets
+will be find and sourced. All other files are ignored.
+
+
+SOURCE CODE TO GLOBAL ENVIRONMENT:
+Source files in a directories named 'global' will be sourced to 
+the global environment, making the loaded code directly accessable 
+by succeeding Job objects.
+
+
+HOT-PLUGIN OF SOURCE CODE WHILE RUNNING:
+The specially named subdirectory 'hot' is intended source code that
+may sourced while job is processed by calling sourceHotCode(job).
+The name 'hot' referers to 'hot-plugin' of source code. Hot 
+directories may be placed in either the src/ directory or the
+current job directory. The latter allows specific jobs to be
+patched while running.
+
+Note, in order for this to happen, you have to call sourceHotCode(job) 
+in your onRun() function, say, in the main interation loop. 
+The code is source to the private working environment, but code
+in a 'global' directory, for instance, src/hot/global/, will be 
+sourced to the global environment.
+
+
+REQUIRED METHODS:
+In this directory you must have an R file, say, onRun.R, defining
+the onRun <- function(job) { ... } function. This function will
+be the function called to run the batch job.
+
+In brief, a job is processed by first source():ing all R files
+in this directory, then onStart() is called, then onRun() and
+finally onFinally(). If an interrupt occurs during onStart() or
+onRun(), onInterrupt() is called and then onFinally(). Similarily,
+if an error occurs, onError() is called and them onFinally().

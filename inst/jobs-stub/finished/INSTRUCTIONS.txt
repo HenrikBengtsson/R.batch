@@ -1,0 +1,11 @@
+Instructions for the finished/ subdirectory
+-------------------------------------------
+
+Do *not* put jobs here! 
+
+Batch jobs that was successfully completed are automatically moved 
+to this directory.
+
+
+
+

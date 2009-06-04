@@ -1,0 +1,29 @@
+Instructions for the running/ subdirectory
+------------------------------------------
+
+Do *not* put jobs here! 
+
+Batch jobs found in the todo/ directory will be moved here 
+automatically when started. A job remains in the running/
+directory as long as it is running. Depending on if it was 
+successful or not, it is moved to the finished/, failed/ 
+or interrupted/ directories.
+
+Note: A killed job due to core dumps, power black-out, SIGTERM 
+and so on will *not* be moved to the failed/ directory. For this 
+reason it might be necessary to once in a while check the running/
+directory for "dead" jobs. If found, they can safely be moved to 
+the todo/ directory in order to re-run.
+
+When a job is processed, the running/ directory is the job's
+current/working directory. For instance, if data files are
+put the jobs/data/ directory, that directory can be accessed
+by ../data/ from the jobs/running/ directory. 
+
+If the R.io::File() class is used, Windows shortcuts (*.lnk) files 
+are "followed" emulating the same behaviour as soft links in Unix.
+Thus, by creating a jobs/data.lnk shortcut, data do not have to 
+be copied.
+
+
+

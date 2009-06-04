@@ -1,0 +1,17 @@
+Instructions for the input/ subdirectory
+-----------------------------------------
+
+Do *not* put jobs here! 
+
+The input/ directory is for common data and other input.
+
+Of course, data may be store in the current directory,
+which means inside the job directory currently running,
+or in any other directory. The input/ is added for 
+conveniency.
+
+Note that the input/ directory may be replace with a 
+link, that is, a soft link on Unix or a Windows shortcut 
+on Windows.
+
+

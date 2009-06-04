@@ -1,0 +1,12 @@
+Instructions for the erroneous/ subdirectory
+--------------------------------------------
+
+Do *not* put jobs here! 
+
+Batch jobs that fails during setup, which is typically due to syntax 
+errors in source code are automatically moved to this directory.
+
+
+
+
+

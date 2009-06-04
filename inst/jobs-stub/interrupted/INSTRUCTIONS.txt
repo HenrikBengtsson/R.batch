@@ -1,0 +1,15 @@
+Instructions for the interrupted/ subdirectory
+----------------------------------------------
+
+Do *not* put jobs here! 
+
+Batch jobs that are interrupted are automatically moved to 
+this directory. 
+
+A job can be interrupted by Ctrl-C, if run interactively. 
+If run non-interactive, the job can be interrupted by 
+sending SIGINT signal. Under Unix, this can be done by
+"pkill -INT ...". Do not use SIGTERM, because then the
+process is killed instantaniously.
+
+

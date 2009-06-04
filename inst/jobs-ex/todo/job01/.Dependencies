@@ -1,0 +1,10 @@
+# List of jobs that:
+#  1) must be completed in order for this job to be run.
+#  2) if they are newer than this job, this job will be
+#     rerun even if it is completed
+job02
+
+# List of files that:
+#  1) must exist
+#  2) if they are newer than this job, this job will be
+#     rerun even if it is completed

@@ -1,0 +1,137 @@
+Package: R.batch
+================
+
+Version: 0.4.5 [2006-09-19]
+o BUG FIX: Argument 'details' in main() of JobBatch must be converted
+  explicitly to a character before calling toupper().  This must be 
+  due to a change in R.
+
+Version: 0.4.4 [2006-09-12]
+o Removed the code that patched capabilities() temporarily while
+  loading job scripts.  See source of Job.R for more details.
+
+Version: 0.4.3 [2006-01-21]
+o Although R CMD check passes without errors and warnings, there
+  are still quite a few methods that has to be carefully documented.
+o Added help for clean() in JobBatch.
+
+Version: 0.4.2 [2005-11-28]
+o Added argument 'maxJobs' to JobBatch$main() and thus also to the
+  shell script RJobBatch.  This allows you to process any number
+  of jobs before quitting.  With maxJobs=Inf, the process will run
+  forever until being interrupted.  If no jobs are available, it
+  will recheck after 'sleepTime' seconds.
+
+Version: 0.4.1 [2005-10-20]
+o BUG FIX: Job() would generate an error. This prevented the Rdoc 
+  compiler to run etc.
+o Removed obsolete "suggested" package R.graphics.
+
+Version: 0.4.0 [2005-05-30]
+o This package no longer dependends on packages R.basic, R.lang and R.io, 
+  but instead on the new R.utils package to which several file utility
+  methods but also the System class has been moved. To make the example
+  code independent of R.graphics, its findPngDevice() function was
+  cut'n'pasted into the source code of the example batch.
+
+Version: 0.3.4 [2005-05-29]
+o Now all fields of the Job class are persistent, that is, they are
+  immediately stored to file when modified, e.g. .persistent/.status.
+  This makes it possible to recreate a Job in a new R session for the
+  purpose of for instance checking the status.
+o Added a *trial* version of having requirements to Job:s. If a file named
+  .Requirements.R is found in src/ or a job directory, it is immediately
+  source():ed by JobBatch before any other source code. If that file
+  returns TRUE, the JobBatch continues, otherwise it tries the next
+  until all jobs has been processed.
+
+Version: 0.3.3 [2005-03-28]
+o Added support for additional input paths "input2/", "input3/" etc.
+  See help getInputPath() in the Job class.
+
+Version: 0.3.2 [2005-03-11]
+o Added setLabel().
+o Now an binary image is save also when an error occurs.
+o sourceHotCode() is using environment 'job' now and not the parent one.
+
+Version: 0.3.1 [2005-03-10]
+o Added argument 'remove=TRUE' to sourceHotCode() to remove source code
+  files afterwards.
+o Now only sourced hot code is written to log, otherwise the log file
+  would grow unnecessarily large when calling sourceHotCode() often
+  and when no hot code existed. Updated sourceDirectory() too.
+
+Version: 0.3.0 [2005-03-09]
+o BUG FIX: Filenames with '&' are invalid when calling bitmap(),
+  which pngDevice() in the JobBatch example *may* do on some
+  systems.
+o BUG FIX: getSummary() gave an error for empty directories.
+o BUG FIX: copyFrom() would not create empty directories.
+o Added sourceHotCode() to hot-plugin source code while processing
+  job. This method has to be called explicitly in onRun(). Errors
+  that occurs *while* sourcing the hot code are logged and skipped
+  with a warning. Added a hot patch to the job02 in the JobBatch
+  example.
+
+Version: 0.2.4 [2005-03-07]
+o Update the job batch example to search for a working PNG device.
+  This is needed on Unix where png(), which requires X11 by default,
+  is only available in interactive mode and not when running in
+  batch mode. When png() is not available, bitmap(), which utilizes
+  ghostscript, can be used. See ?bitmap for more details.
+
+Version: 0.2.3 [2005-03-02]
+o Now copyFrom() in JobBatch takes the argument 'conlflicts', which
+  is more general than former 'overwrite'.
+o Now log files and sinks are sent to output/ by default. This will
+  make it much easier to get an overview of the status of all jobs.
+  This will lower the need for the user to open the job directory,
+  which in turn will lower the risk for the directory to be locked
+  when trying to move it.
+o Added argument 'sink' to getRunAndFinishJob() in order to sink Job 
+  output to file. To do this methods sink() and unsink() was added 
+  to the Job class.
+o Added command line argument '--sink', which defaults to TRUE.
+o Now getLabel() returns <dirname>_<user>@<host> by default.
+
+Version: 0.2.2 [2005-03-01]
+o BUG FIX: saveImage() in Job used a non-existing reference variable.
+o Now main() close all open devices after running job, if called
+  in a non-interactive environment.
+o onFinally() will by default close all open devices.
+o Removed "internal" functions getOutputPath() and getInputPath()
+  that took no arguments, and replaced them with corresponding
+  methods in class Job. These can be called using the 'job' object
+  passed as the first argument to onRun() etc.
+o Now getLabel() in Job returns the basename of the job directory
+  as a prefix. This will help identify which the job is.
+o Renamed getSrc() in JobBatch to getSrcPath() and similar for 
+  the others. Before getOutput() in JobBatch corresponded to 
+  getOutputPath() in Job.
+
+Version: 0.2.1 [2005-02-23]
+o Added "useful" scripts RJobBatch and RJobBatch.bat.
+o Added JobBatch$main() to be called from the command line.
+o Added one job that will generate an error to the JobBatch 
+  example to illustrate the effect of errors. Another job with a
+  syntax error was added to illustrate a example of erroneous code.
+o Now the JobBatch example creates a 'job-ex' directory and not
+  a 'job', because there was a risk that the user used that 
+  directory.
+o BUG FIX: The JobBatch example was referering to R.jobs rather
+  than R.batch. This would result in a huge batch directory.
+o BUG FIX: Detected failure of setup(), but since the return()
+  was inside a tryCatch(), it only returned from the latter
+  making the code continue to onStart() and so on.
+
+Version: 0.2.0 [2005-02-19]
+o Got a complete example based on Martin Maechler's Mandelbrot
+  functions.
+
+Version: 0.1.0 [2005-02-18]
+o Made into a package.
+
+Version: 0.0 [summer 2004]
+o Created scripts to run batch jobs on 30+ computers at
+  the Centre for Mathematical Sciences at Lund University.
+  This was for my dissertation.

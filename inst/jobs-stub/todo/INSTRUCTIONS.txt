@@ -1,0 +1,13 @@
+Instructions for the todo/ subdirectory
+---------------------------------------
+
+Put your job**/ *directories*, which contains jobs to be done,
+in this subdirectory. 
+
+Each job**/ directory may contain a SETTINGS file plus R files (named *.R) 
+that contain source code specific to the job. Note that general source
+code to be reused by all batch jobs, is better put in the src/ directory.
+
+When a batch job is started, it first moved to the running/ directory.
+
+

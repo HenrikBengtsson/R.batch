@@ -1,0 +1,19 @@
+Instructions for the output/ subdirectory
+-----------------------------------------
+
+Do *not* put jobs here! 
+
+The output/ directory is a common place for all jobs where
+they can store estimates, results, images etc.
+
+Of course, output may be store in the current directory,
+which means inside the job directory currently running,
+or in any other directory. The output/ is added for 
+conveniency.
+
+Note that the output/ directory may be replace with a 
+link, that is, a soft link on Unix or a Windows shortcut 
+on Windows.
+
+
+

@@ -1,0 +1,16 @@
+Instructions for the failed/ subdirectory
+-----------------------------------------
+
+Do *not* put jobs here! 
+
+Batch jobs that failed are automatically moved to this directory.
+A batch job that generates an error that is not caught is
+considered to fail. 
+
+Note: Failure due to core dumps, power black-out or if the process
+is killed (with SIGTERM) the batch job will not be moved to this 
+directory.
+
+
+
+
