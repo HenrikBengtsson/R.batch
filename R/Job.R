@@ -154,7 +154,8 @@ setMethodS3("addPersistentField", "Job", function(this, names, update=TRUE, ...)
     for (name in names) {
       pathname <- filePath(path, name, expandLinks="any");
       if (file.exists(pathname)) {
-        load(pathname);
+        value <- NULL; rm(value); # To please R CMD check
+        load(pathname);  # Loads object named 'value'
         this[[name]] <- value;
       } else {
         value <- this[[name]];
@@ -210,7 +211,8 @@ setMethodS3("getField", "Job", function(this, name, ...) {
   if (isPersistentField(this, name)) {
     pathname <- file.path(getPersistentPath(this), name);
     if (file.exists(pathname)) {
-      load(pathname);
+      value <- NULL; rm(value); # To please R CMD check
+      load(pathname);  # Loads object named 'value'
       this[[name]] <- value;
       value;
     } else {
@@ -1895,7 +1897,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
   log && cat(log, "Sinking output.");
   # Sink? (Cannot be done from within tryCatch()! /HB 2005-03-02).
   if (sink && sink(this)) {
-    on.exit(if (isSinked(this)) unsink(this), append=TRUE);
+    on.exit(if (isSinked(this)) unsink(this), add=TRUE);
   }
 
   touch(this);
@@ -1948,7 +1950,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
       # Call onReset() from within the local job environment
       eval(substitute(
         onReset(this), 
-        list=list(this=this))
+        list(this=this))
       , envir=this$.env);
 
       log && popState(log);
@@ -1995,7 +1997,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
       # Call onRestart() from within the local job environment
       eval(substitute(
         onRestart(this, fields=fields), 
-        list=list(this=this))
+        list(this=this))
       , envir=this$.env);
 
       log && popState(log);
@@ -2023,7 +2025,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     # Call onStart() from within the local job environment
     eval(substitute(
       onStart(this), 
-      list=list(this=this))
+      list(this=this))
     , envir=this$.env);
 
     log && popState(log);
@@ -2049,7 +2051,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     # Call onRun() from within the local job environment
     eval(substitute(
       onRun(this), 
-      list=list(this=this))
+      list(this=this))
     , envir=this$.env);
 
     log && popState(log);
@@ -2079,7 +2081,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     # Call onInterrupt() from within the local job environment
     eval(substitute(
       onInterrupt(this, interrupt), 
-      list=list(this=this, interrupt=interrupt))
+      list(this=this, interrupt=interrupt))
     , envir=this$.env);
 
     log && popState(log);
@@ -2115,7 +2117,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     # Call onError() from within the local job environment
     eval(substitute(
       onError(this, error), 
-      list=list(this=this, error=ex))
+      list(this=this, error=ex))
     , envir=this$.env);
 
     log && popState(log);
@@ -2141,7 +2143,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
       # Call onFinally() from within the local job environment
       eval(substitute(
         onFinally(this), 
-        list=list(this=this))
+        list(this=this))
       , envir=this$.env);
 
       log && popState(log);
@@ -2612,6 +2614,8 @@ setMethodS3("unsink", "Job", function(this, output=TRUE, message=TRUE, ...) {
 
 ###########################################################################
 # HISTORY: 
+# 2009-06-06
+# o BUG FIX: "Unnamed" argument 'list' in all substitute(..., list=...). 
 # 2006-09-12
 # o Removed the workaround that redefined capabilities() temporarily in
 #   sourceDirectoryWithPreprocessor().  This was due to a temporary DNS

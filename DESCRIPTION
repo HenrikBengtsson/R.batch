@@ -1,6 +1,6 @@
 Package: R.batch
-Version: 0.4.5
-Date: 2006-09-19
+Version: 0.4.6
+Date: 2009-06-06
 Title: Methods to run batch jobs in R
 Author: Henrik Bengtsson <henrikb@braju.com>
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
@@ -8,7 +8,5 @@ Depends: R (>= 2.0.0), R.oo, R.utils
 Description: The package provides methods to batch run R scripts in a straightforward manner. A job batch is defined by a root directory containing subdirectories todo/, running/, finished/, failed/, src/ among others. A job to be processed is a directory placed in todo/. A job is processed by moving it to running/, then sourcing the R files in src/ (containing common code) and then the ones in the job directory (contain job specific code), in which a function onRun() has to be defined, which is then called. Succesfully jobs end up in finished/ whereas failed jobs in failed/. 
 License: LGPL (>= 2.1)
 URL: http://www.braju.com/R/
-ContribURL: http://www.maths.lth.se/help/R/  
-DevelURL: http://www.maths.lth.se/help/R/
 LazyLoad: TRUE
 

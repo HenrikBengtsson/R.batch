@@ -1,5 +1,5 @@
 # To prevent R from asking us to press ENTER before each image
-options(par.ask.default=FALSE)
+options(device.ask.default=FALSE)
 
 # Create a job batch
 batch <- JobBatch("jobs-ex")

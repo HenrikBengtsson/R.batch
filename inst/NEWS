@@ -1,19 +1,31 @@
 Package: R.batch
 ================
 
+Version: 0.4.6 [2009-06-06]
+o BUG FIX: "Unnamed" argument 'list' in all substitute(..., list=...). 
+o BUG FIX: example(JobBatch) tried to set obsolete graphics parameter
+  'par.ask.default' (replaced by 'device.ask.default').
+o CLEAN UP: Now the package startup message is generated using
+  packageStartupMessage() so that it can be silenced using options.
+o CLEAN UP: Renamed HISTORY file to NEWS.
+
+
 Version: 0.4.5 [2006-09-19]
 o BUG FIX: Argument 'details' in main() of JobBatch must be converted
   explicitly to a character before calling toupper().  This must be 
   due to a change in R.
 
+
 Version: 0.4.4 [2006-09-12]
 o Removed the code that patched capabilities() temporarily while
   loading job scripts.  See source of Job.R for more details.
+
 
 Version: 0.4.3 [2006-01-21]
 o Although R CMD check passes without errors and warnings, there
   are still quite a few methods that has to be carefully documented.
 o Added help for clean() in JobBatch.
+
 
 Version: 0.4.2 [2005-11-28]
 o Added argument 'maxJobs' to JobBatch$main() and thus also to the
@@ -22,10 +34,12 @@ o Added argument 'maxJobs' to JobBatch$main() and thus also to the
   forever until being interrupted.  If no jobs are available, it
   will recheck after 'sleepTime' seconds.
 
+
 Version: 0.4.1 [2005-10-20]
 o BUG FIX: Job() would generate an error. This prevented the Rdoc 
   compiler to run etc.
 o Removed obsolete "suggested" package R.graphics.
+
 
 Version: 0.4.0 [2005-05-30]
 o This package no longer dependends on packages R.basic, R.lang and R.io, 
@@ -33,6 +47,7 @@ o This package no longer dependends on packages R.basic, R.lang and R.io,
   methods but also the System class has been moved. To make the example
   code independent of R.graphics, its findPngDevice() function was
   cut'n'pasted into the source code of the example batch.
+
 
 Version: 0.3.4 [2005-05-29]
 o Now all fields of the Job class are persistent, that is, they are
@@ -45,14 +60,17 @@ o Added a *trial* version of having requirements to Job:s. If a file named
   returns TRUE, the JobBatch continues, otherwise it tries the next
   until all jobs has been processed.
 
+
 Version: 0.3.3 [2005-03-28]
 o Added support for additional input paths "input2/", "input3/" etc.
   See help getInputPath() in the Job class.
+
 
 Version: 0.3.2 [2005-03-11]
 o Added setLabel().
 o Now an binary image is save also when an error occurs.
 o sourceHotCode() is using environment 'job' now and not the parent one.
+
 
 Version: 0.3.1 [2005-03-10]
 o Added argument 'remove=TRUE' to sourceHotCode() to remove source code
@@ -60,6 +78,7 @@ o Added argument 'remove=TRUE' to sourceHotCode() to remove source code
 o Now only sourced hot code is written to log, otherwise the log file
   would grow unnecessarily large when calling sourceHotCode() often
   and when no hot code existed. Updated sourceDirectory() too.
+
 
 Version: 0.3.0 [2005-03-09]
 o BUG FIX: Filenames with '&' are invalid when calling bitmap(),
@@ -73,12 +92,14 @@ o Added sourceHotCode() to hot-plugin source code while processing
   with a warning. Added a hot patch to the job02 in the JobBatch
   example.
 
+
 Version: 0.2.4 [2005-03-07]
 o Update the job batch example to search for a working PNG device.
   This is needed on Unix where png(), which requires X11 by default,
   is only available in interactive mode and not when running in
   batch mode. When png() is not available, bitmap(), which utilizes
   ghostscript, can be used. See ?bitmap for more details.
+
 
 Version: 0.2.3 [2005-03-02]
 o Now copyFrom() in JobBatch takes the argument 'conlflicts', which
@@ -93,6 +114,7 @@ o Added argument 'sink' to getRunAndFinishJob() in order to sink Job
   to the Job class.
 o Added command line argument '--sink', which defaults to TRUE.
 o Now getLabel() returns <dirname>_<user>@<host> by default.
+
 
 Version: 0.2.2 [2005-03-01]
 o BUG FIX: saveImage() in Job used a non-existing reference variable.
@@ -109,6 +131,7 @@ o Renamed getSrc() in JobBatch to getSrcPath() and similar for
   the others. Before getOutput() in JobBatch corresponded to 
   getOutputPath() in Job.
 
+
 Version: 0.2.1 [2005-02-23]
 o Added "useful" scripts RJobBatch and RJobBatch.bat.
 o Added JobBatch$main() to be called from the command line.
@@ -124,12 +147,15 @@ o BUG FIX: Detected failure of setup(), but since the return()
   was inside a tryCatch(), it only returned from the latter
   making the code continue to onStart() and so on.
 
+
 Version: 0.2.0 [2005-02-19]
 o Got a complete example based on Martin Maechler's Mandelbrot
   functions.
 
+
 Version: 0.1.0 [2005-02-18]
 o Made into a package.
+
 
 Version: 0.0 [summer 2004]
 o Created scripts to run batch jobs on 30+ computers at
