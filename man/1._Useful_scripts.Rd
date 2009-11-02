@@ -19,7 +19,7 @@
  Given that this script is in the \code{PATH} (or in the current
  directory), a job can be process by calling\cr
 
- \code{RJobBatch --root=jobs-mandelbroot}
+ \code{RJobBatch --root=jobs-mandelbrot}
 
  from the command prompt.\cr
 
@@ -67,7 +67,7 @@ del "\%TEMP\%\JobBatchMain.R"
  Given that this script is in the \code{PATH} (or in the current
  directory), and has execute rights, a job can be process by calling\cr
 
- \code{RJobBatch --root=jobs-mandelbroot}
+ \code{RJobBatch --root=jobs-mandelbrot}
 
  from the command prompt.\cr
 

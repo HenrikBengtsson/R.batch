@@ -4,7 +4,7 @@ options(device.ask.default=FALSE)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Setup a demo job directory
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-rootPath <- JobBatch$setupDemo("mandelbroot", overwrite=TRUE)
+rootPath <- JobBatch$setupDemo("mandelbrot", overwrite=TRUE)
 batch <- JobBatch(rootPath)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

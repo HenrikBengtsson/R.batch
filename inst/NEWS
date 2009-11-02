@@ -7,7 +7,7 @@ o DOCUMENTATION: Added help on how to automatically add
   the bin/ directory of the R.batch package to the search path.
 o ROBUSTNESS: Now the state of verbose identation is 
   preserved when exiting functions.
-o CLEAN UP: Renamed the jobs-ex/ directory to jobs-mandelbroot/.
+o CLEAN UP: Renamed the jobs-ex/ directory to jobs-mandelbrot/.
 o CLEAN UP: Renamed the misc/ directory to bin/.
 o Updated the package dependencies.
 

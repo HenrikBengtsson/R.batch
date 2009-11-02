@@ -1458,7 +1458,7 @@ setMethodS3("getSummary", "JobBatch", function(this, ...) {
 # }
 #
 # \examples{\dontrun{
-#   RJobBatch --details --root=jobs-mandelbroot
+#   RJobBatch --details --root=jobs-mandelbrot
 # }}
 #
 # \seealso{
@@ -1492,15 +1492,15 @@ setMethodS3("main", "JobBatch", function(static, root="jobs", reset=FALSE, sink=
   args <- commandArgs(asValues=TRUE);
 
   # Override method arguments with command-line arguments, if specified.
-  if (!is.null(args$root)) 
+  if (!is.null(args$root))
     root <- args$root;
   if (!is.null(args$reset))
     reset <- args$reset;
   if (!is.null(args$sink))
     sink <- args$sink;
-  if (!is.null(args$details)) 
+  if (!is.null(args$details))
     details <- args$details;
-  if (!is.null(args$maxJobs)) 
+  if (!is.null(args$maxJobs))
     maxJobs <- args$maxJobs;
 
 
@@ -1581,11 +1581,17 @@ setMethodS3("main", "JobBatch", function(static, root="jobs", reset=FALSE, sink=
 #
 # \value{
 #  Returns (invisibly) the path to the created directory, which has
-#  the base name \code{jobs-<demo>}, e.g. \code{demo-mandelbroot}.
+#  the base name \code{jobs-<demo>}, e.g. \code{demo-mandelbrot}.
 # }
 #
 # \seealso{
 #   @seeclass
+# }
+#
+# \details{
+#   The Mandelbrot demo was adopted from code by Martin Maechler. See
+#   files in \code{system.file("jobs-mandelbrot/src", package="R.batch")}
+#   for details.
 # }
 #
 # @author
@@ -1593,7 +1599,7 @@ setMethodS3("main", "JobBatch", function(static, root="jobs", reset=FALSE, sink=
 # @keyword programming
 # @keyword internal
 #**/#######################################################################
-setMethodS3("setupDemo", "JobBatch", function(static, demo=c("mandelbroot"), overwrite=FALSE, ...) {
+setMethodS3("setupDemo", "JobBatch", function(static, demo=c("mandelbrot"), overwrite=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1603,8 +1609,12 @@ setMethodS3("setupDemo", "JobBatch", function(static, demo=c("mandelbroot"), ove
   # Argument 'overwrite':
   overwrite <- Arguments$getLogical(overwrite);
 
+
+  # Setup the job-batch name
+  jobBatchName <- sprintf("jobs-%s", demo);
+
   # Setup the rootPath directory
-  rootPath <- sprintf("jobs-%s", demo);  
+  rootPath <- jobBatchName;
   rootPath <- Arguments$getWritablePath(rootPath, mustNotExist=!overwrite);
 
   # Overwrite?
@@ -1612,16 +1622,17 @@ setMethodS3("setupDemo", "JobBatch", function(static, demo=c("mandelbroot"), ove
     removeDirectory(rootPath, recursive=TRUE);
   }
 
-  # Create a job batch
-  batch <- JobBatch(rootPath);
+  # The source directory to be copied
+  srcPath <- system.file(package="R.batch");
+  srcPath <- file.path(srcPath, jobBatchName);
 
-  # Copy example for generating multiple Mandelbrot sets.
-  # The Mandelbrot code was written by Martin Maechler. See
-  # files in system.file("jobs-ex/src", package="R.batch")
-  # for details.
-  srcPath <- system.file("jobs-ex", package="R.batch");
-  exBatch <- JobBatch(srcPath);
-  copyFrom(batch, exBatch, conflicts="overwrite");
+  # Sanity check
+  srcPath <- Arguments$getReadablePath(srcPath, mustExist=TRUE);
+
+  # Copy the directory
+  batch <- JobBatch(rootPath);
+  srcBatch <- JobBatch(srcPath);
+  copyFrom(batch, srcBatch, conflicts="overwrite");
 
   invisible(rootPath);
 }, static=TRUE, protected=TRUE)
