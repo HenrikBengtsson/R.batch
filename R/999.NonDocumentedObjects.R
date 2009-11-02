@@ -108,6 +108,7 @@
 # @alias getStatus
 # @alias getSubdirectory
 # @alias validate
+# @alias setupDemo
 #
 # \description{
 #   This page contains aliases for all "non-documented" objects that 

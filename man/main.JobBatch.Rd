@@ -72,7 +72,7 @@
 }
 
 \examples{\dontrun{
-  RJobBatch --details --root=jobs-ex
+  RJobBatch --details --root=jobs-mandelbroot
 }}
 
 \seealso{

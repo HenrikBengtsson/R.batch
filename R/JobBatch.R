@@ -27,33 +27,32 @@
 # \details{
 #  When a job is \emph{processed} then following happens in order:
 #  \enumerate{
-#   \item A non-locked job from the "todo" directory will be retrieved.
-#   \item The job will be moved to the "running" directory.
+#   \item A non-locked job from the "todo/" directory will be retrieved.
+#   \item The job will be moved to the "running/" directory.
 #   \item The job will be locked (a lock file is created and opened).
 #   \item If any of the above fails, @NULL is returned.
-#   
-#   \item The job is initiated; source code in the "src" directory
+#   \item The job is initiated; source code in the "src/" directory
 #         followed by the job directory is loaded. 
 #         Here \code{onRun()} must be defined. All other \code{onNNN()}
 #         functions maybe be redefined, otherwise default ones are used.
-#         If there is syntax error in the source, the job is moved to 
-#         the "erroneous" directory.
+#         If there is syntax error in the source code, the job is moved to 
+#         the "erroneous/" directory.
 #   \item The working directory is set to the directory of the job.
 #   \item If a stored image (typically from a previously interrupted
 #         job) is detected, it is loaded into the current job and
 #         onRestart() is called. 
 #   \item The job is started and \code{onStart()} is called.
 #   \item \code{onRun()} is called.
-#   \item If sucessful, the job is moved to "finished" and is unlocked
+#   \item If sucessful, the job is moved to "finished/" and is unlocked
 #         (the lock file is removed).
 #   \item The @see "Job" object that was processed is returned.
 #  }
 #
 #  In addition, for step 7-9:
 #  If an error occurs, \code{onError()} followed by \code{onFinally()} 
-#  are called and the job is moved to the "failed" directory. 
+#  are called and the job is moved to the "failed/" directory. 
 #  If an interrupt occurs, \code{onInterrupt()} followed by 
-#  \code{onFinally()} are called and the job is moved to the "interrupted" 
+#  \code{onFinally()} are called and the job is moved to the "interrupted/" 
 #  directory. By default, \code{onInterrupt()} save an image of the job,
 #  by calling \code{saveImage(job)}.
 #  In any case the job will be unlock and returned.
@@ -363,23 +362,26 @@ setMethodS3("getSrcPath", "JobBatch", function(this, ...) {
 setMethodS3("validate", "JobBatch", function(this, ...) {
   # Validate 'root' field. We cannot do it in the constructor because
   # it should always be possible to call JobBatch().
-  if (is.null(this$.root))
+  if (is.null(this$.root)) {
     throw("Job root is NULL.");
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert that the job root exists.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   pathname <- getRoot(this);
-  if (!isDirectory(pathname))
+  if (!isDirectory(pathname)) {
     throw("Job root does not exists or is not a directory: ", pathname);
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert that all subdirectories exist
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dirs <- c("todo", "running", "finished", "failed", "interrupted", 
                                     "erroneous", "src", "input", "output");
-  for (dir in dirs)
+  for (dir in dirs) {
     getDirectory(this, dir);
+  }
 
   invisible();
 })
@@ -430,10 +432,12 @@ setMethodS3("moveJobTo", "JobBatch", function(this, job, dest=c("todo", "running
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'job':
-  if (!inherits(job, "Job"))
+  if (!inherits(job, "Job")) {
     throw("Argument 'job' is not a Job object: ", class(job)[1]);
-  if (!isExisting(job))
+  }
+  if (!isExisting(job)) {
     throw("Job does not exist: ", getPath(job));
+  }
 
   # Argument 'dest':
   dest <- match.arg(dest);
@@ -448,14 +452,16 @@ setMethodS3("moveJobTo", "JobBatch", function(this, job, dest=c("todo", "running
   }
 
   # Check if destination already exists.
-  if (file.exists(destPath))
+  if (file.exists(destPath)) {
     throw("Cannot move job. Destination already exists: ", destPath);
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert that it is ok to move job
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (isLocked(job))
+  if (isLocked(job)) {
     throw("Cannot move job. Job is locked.");
+  }
 
   res <- file.rename(srcPath, destPath);
 
@@ -507,11 +513,13 @@ setMethodS3("moveJobTo", "JobBatch", function(this, job, dest=c("todo", "running
 # @keyword programming
 #**/#######################################################################
 setMethodS3("resetJobs", "JobBatch", function(this, jobs=NULL, ...) {
-  if (is.null(jobs))
+  if (is.null(jobs)) {
     return(invisible());
+  }
 
-  if (!is.list(jobs))
+  if (!is.list(jobs)) {
     jobs <- list(jobs);
+  }
 
   for (job in jobs) {
     res <- moveJobTo(this, job, "todo");
@@ -556,11 +564,13 @@ setMethodS3("resetJobs", "JobBatch", function(this, jobs=NULL, ...) {
 # @keyword programming
 #**/#######################################################################
 setMethodS3("clean", "JobBatch", function(this, jobs=findJobs(this), ...) {
-  if (is.null(jobs))
+  if (is.null(jobs)) {
     return(invisible());
+  }
 
-  if (!is.list(jobs))
+  if (!is.list(jobs)) {
     jobs <- list(jobs);
+  }
 
   for (job in jobs) {
     moveOutputFilesTo(job, path=getPath(job));
@@ -688,8 +698,9 @@ setMethodS3("checkRequirements", "JobBatch", function(static, path, ...) {
   srcPath <- filePath(path, expandLinks="any");
   reqFiles <- listDirectory(srcPath, pattern="^.Requirements.R$", 
                             allNames=TRUE, fullNames=TRUE, recursive=TRUE);
-  if (length(reqFiles) == 0)
+  if (length(reqFiles) == 0) {
     return(NULL);
+  }
 
   for (reqFile in reqFiles) {
     res <- FALSE;
@@ -699,8 +710,9 @@ setMethodS3("checkRequirements", "JobBatch", function(static, path, ...) {
     }, error = function(ex) {
     })
 
-    if (!identical(res, TRUE))
+    if (!identical(res, TRUE)) {
       return(reqFile);
+    }
   }
 
   NULL;
@@ -759,6 +771,10 @@ setMethodS3("getNextJob", "JobBatch", function(this, which=c("first", "last", "r
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -946,6 +962,10 @@ setMethodS3("getRunAndFinishJob", "JobBatch", function(this, sink=TRUE, reset=FA
 
   # Argument 'verbose'
   verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
 
   # Argument '.cleanup'
   if (!is.null(.cleanup) && !is.function(.cleanup))
@@ -1096,6 +1116,11 @@ setMethodS3("run", "JobBatch", function(this, maxJobs=-1, sleepTime=15, clean=FA
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
 
   # Argument 'clean':
   clean <- Arguments$getLogical(clean);
@@ -1433,7 +1458,7 @@ setMethodS3("getSummary", "JobBatch", function(this, ...) {
 # }
 #
 # \examples{\dontrun{
-#   RJobBatch --details --root=jobs-ex 
+#   RJobBatch --details --root=jobs-mandelbroot
 # }}
 #
 # \seealso{
@@ -1499,6 +1524,10 @@ setMethodS3("main", "JobBatch", function(static, root="jobs", reset=FALSE, sink=
     details <- as.integer(details);
   }
   verbose <- Arguments$getVerbose(details);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
 
   # Argument 'maxJobs':
   maxJobs <- Arguments$getDouble(maxJobs, range=c(-1, Inf));
@@ -1531,8 +1560,78 @@ setMethodS3("main", "JobBatch", function(static, root="jobs", reset=FALSE, sink=
 
 
 
+
+########################################################################/**
+# @RdocMethod setupDemo
+#
+# @title "Static method to setup a demo job batch directory structure"
+#
+# \description{
+#  @get "title". 
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{demo}{The demo to be setup.}
+#  \item{overwrite}{If @TRUE, any preexisting directory will be removed,
+#    otherwise an exception is thrown.}
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#  Returns (invisibly) the path to the created directory, which has
+#  the base name \code{jobs-<demo>}, e.g. \code{demo-mandelbroot}.
+# }
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @author
+#
+# @keyword programming
+# @keyword internal
+#**/#######################################################################
+setMethodS3("setupDemo", "JobBatch", function(static, demo=c("mandelbroot"), overwrite=FALSE, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'demo':
+  demo <- match.arg(demo);
+
+  # Argument 'overwrite':
+  overwrite <- Arguments$getLogical(overwrite);
+
+  # Setup the rootPath directory
+  rootPath <- sprintf("jobs-%s", demo);  
+  rootPath <- Arguments$getWritablePath(rootPath, mustNotExist=!overwrite);
+
+  # Overwrite?
+  if (isDirectory(rootPath)) {
+    removeDirectory(rootPath, recursive=TRUE);
+  }
+
+  # Create a job batch
+  batch <- JobBatch(rootPath);
+
+  # Copy example for generating multiple Mandelbrot sets.
+  # The Mandelbrot code was written by Martin Maechler. See
+  # files in system.file("jobs-ex/src", package="R.batch")
+  # for details.
+  srcPath <- system.file("jobs-ex", package="R.batch");
+  exBatch <- JobBatch(srcPath);
+  copyFrom(batch, exBatch, conflicts="overwrite");
+
+  invisible(rootPath);
+}, static=TRUE, protected=TRUE)
+
+
+
 ###########################################################################
 # HISTORY: 
+# 2009-11-01
+# o Added static setupDemo() for JobBatch.
 # 2006-09-19
 # o BUG FIX: Argument 'details' must be converted explicitly to a character
 #   before calling toupper().  This must be due to a change in R.

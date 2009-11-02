@@ -1,15 +1,11 @@
 # To prevent R from asking us to press ENTER before each image
 options(device.ask.default=FALSE)
 
-# Create a job batch
-batch <- JobBatch("jobs-ex")
-
-# Copy example for generating multiple Mandelbrot sets.
-# The Mandelbrot code was written by Martin Maechler. See
-# files in system.file("jobs-ex/src", package="R.batch")
-# for details.
-exBatch <- JobBatch(system.file("jobs-ex", package="R.batch"))
-copyFrom(batch, exBatch, conflicts="overwrite")
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# Setup a demo job directory
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+rootPath <- JobBatch$setupDemo("mandelbroot", overwrite=TRUE)
+batch <- JobBatch(rootPath)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Now, imaging that this code was running on several 
@@ -26,6 +22,9 @@ print(batch)
 print(list.files(getOutputPath(batch)))
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# ONLY FOR REDUNDANCY TESTING OF THE PACKAGE
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Assert that jobs in batch ended up where expected.
 cat("Validation JobBatch results...\n");
 expected <- list(erroneous="job05", failed="job04", interrupted=NULL,

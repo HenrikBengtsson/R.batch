@@ -34,11 +34,16 @@ setConstructorS3("Job", function(jobPath=NULL, label=NULL, verbose=FALSE) {
   # Assert arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'jobPath':
-  if (!is.null(jobPath))
+  if (!is.null(jobPath)) {
     jobPath <- Arguments$getReadablePath(jobPath, mustExist=TRUE);
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

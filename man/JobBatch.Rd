@@ -72,12 +72,13 @@ extends \link[R.oo]{Object}\cr
  \tab \code{\link[R.batch:resetJobs.JobBatch]{resetJobs}} \tab Resets Jobs in the job batch.\cr
  \tab \code{\link[R.batch:run.JobBatch]{run}} \tab Process some or all jobs available.\cr
  \tab \code{setRoot} \tab  -\cr
+ \tab \code{\link[R.batch:setupDemo.JobBatch]{setupDemo}} \tab Static method to setup a demo job batch directory structure.\cr
  \tab \code{\link[R.batch:validate.JobBatch]{validate}} \tab Validates the job batch.\cr
 }
 
 
  \bold{Methods inherited from Object}:\cr
-$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, save
+$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
 
 
  }
@@ -85,33 +86,32 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clone, detach
  \details{
   When a job is \emph{processed} then following happens in order:
   \enumerate{
-   \item A non-locked job from the "todo" directory will be retrieved.
-   \item The job will be moved to the "running" directory.
+   \item A non-locked job from the "todo/" directory will be retrieved.
+   \item The job will be moved to the "running/" directory.
    \item The job will be locked (a lock file is created and opened).
    \item If any of the above fails, \code{\link[base]{NULL}} is returned.
- 
-   \item The job is initiated; source code in the "src" directory
+   \item The job is initiated; source code in the "src/" directory
          followed by the job directory is loaded.
          Here \code{onRun()} must be defined. All other \code{onNNN()}
          functions maybe be redefined, otherwise default ones are used.
-         If there is syntax error in the source, the job is moved to
-         the "erroneous" directory.
+         If there is syntax error in the source code, the job is moved to
+         the "erroneous/" directory.
    \item The working directory is set to the directory of the job.
    \item If a stored image (typically from a previously interrupted
          job) is detected, it is loaded into the current job and
          onRestart() is called.
    \item The job is started and \code{onStart()} is called.
    \item \code{onRun()} is called.
-   \item If sucessful, the job is moved to "finished" and is unlocked
+   \item If sucessful, the job is moved to "finished/" and is unlocked
          (the lock file is removed).
    \item The \code{\link{Job}} object that was processed is returned.
   }
 
   In addition, for step 7-9:
   If an error occurs, \code{onError()} followed by \code{onFinally()}
-  are called and the job is moved to the "failed" directory.
+  are called and the job is moved to the "failed/" directory.
   If an interrupt occurs, \code{onInterrupt()} followed by
-  \code{onFinally()} are called and the job is moved to the "interrupted"
+  \code{onFinally()} are called and the job is moved to the "interrupted/"
   directory. By default, \code{onInterrupt()} save an image of the job,
   by calling \code{saveImage(job)}.
   In any case the job will be unlock and returned.
@@ -127,15 +127,11 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clone, detach
 # To prevent R from asking us to press ENTER before each image
 options(device.ask.default=FALSE)
 
-# Create a job batch
-batch <- JobBatch("jobs-ex")
-
-# Copy example for generating multiple Mandelbrot sets.
-# The Mandelbrot code was written by Martin Maechler. See
-# files in system.file("jobs-ex/src", package="R.batch")
-# for details.
-exBatch <- JobBatch(system.file("jobs-ex", package="R.batch"))
-copyFrom(batch, exBatch, conflicts="overwrite")
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Setup a demo job directory
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rootPath <- JobBatch$setupDemo("mandelbroot", overwrite=TRUE)
+batch <- JobBatch(rootPath)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Now, imaging that this code was running on several
@@ -152,6 +148,9 @@ print(batch)
 print(list.files(getOutputPath(batch)))
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# ONLY FOR REDUNDANCY TESTING OF THE PACKAGE
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Assert that jobs in batch ended up where expected.
 cat("Validation JobBatch results...\n");
 expected <- list(erroneous="job05", failed="job04", interrupted=NULL,
