@@ -1445,7 +1445,7 @@ setMethodS3("getSummary", "JobBatch", function(this, ...) {
 #  \item{details}{A @logical value specifying the default value for the
 #    command line option \code{--details}.}
 #  \item{maxJobs}{A @integer (or the double @Inf) value specifying the
-#    default value for the command line option \code{--maxjobs}.}
+#    default value for the command line option \code{--maxJobs}.}
 #  \item{sleepTime}{A @double value specifying the
 #    default value for the command line option \code{--sleepTime}.}
 #  \item{clean}{If @TRUE, job specific files in the output path are

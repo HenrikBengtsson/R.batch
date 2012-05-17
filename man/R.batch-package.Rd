@@ -40,7 +40,7 @@
   title = {R.batch: Methods to run batch jobs in R},
   author = {Henrik Bengtsson},
   year = {2012},
-  note = {R package version 0.6.0},
+  note = {R package version 0.6.1},
   url = {http://www.braju.com/R/},
 }
 }

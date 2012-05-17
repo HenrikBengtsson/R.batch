@@ -59,7 +59,7 @@
  \item{details}{A \code{\link[base]{logical}} value specifying the default value for the
    command line option \code{--details}.}
  \item{maxJobs}{A \code{\link[base]{integer}} (or the double \code{\link[base:is.finite]{Inf}}) value specifying the
-   default value for the command line option \code{--maxjobs}.}
+   default value for the command line option \code{--maxJobs}.}
  \item{sleepTime}{A \code{\link[base]{double}} value specifying the
    default value for the command line option \code{--sleepTime}.}
  \item{clean}{If \code{\link[base:logical]{TRUE}}, job specific files in the output path are

@@ -1,5 +1,5 @@
 Package: R.batch
-Version: 0.6.0
+Version: 0.6.1
 Date: 2012-05-16
 Title: Methods to run batch jobs in R
 Author: Henrik Bengtsson <henrikb@braju.com>

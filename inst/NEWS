@@ -1,6 +1,11 @@
 Package: R.batch
 ================
 
+Version: 0.6.1 [2012-12-16]
+o CLEANUP: Using getEnvironment(this) instead of this$.env when
+  'this' is an R.oo::Object.
+
+
 Version: 0.6.0 [2012-12-16]
 o Package now passes R CMD check on R v2.15.0.
 o Added a NAMESPACE and added to 'BuildKeepEmpty: TRUE' DESCRIPTION.

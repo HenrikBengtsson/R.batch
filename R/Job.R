@@ -1397,6 +1397,16 @@ setMethodS3("lock", "Job", function(this, ...) {
 
   log && cat(log, "Trying to lock job.");
 
+  # Preparing as much as possible before trying to acquire the lock.
+  s <- paste("This job was locked at ", as.character(date()), 
+     " by process ", getLabel(this), 
+     " running on host ", System$getHostname(), 
+     " by user ", System$getUsername(), ".", sep="");
+  s <- paste(s, " Software: ", base::R.version.string, ".", sep="");
+
+  # Get the pathname of the lock file
+  lockFile <- file.path(getPath(this), ".lock");
+
   if (isLocked(this))
     throw("Job is already locked.");
 
@@ -1405,14 +1415,9 @@ setMethodS3("lock", "Job", function(this, ...) {
 
   # Create and open lock file without closing it in order
   # to prevent another process from deleting it
-  lockFile <- file.path(getPath(this), ".lock");
   this$.lock <- file(lockFile, open="w");
-  s <- paste("This job was locked at ", as.character(date()), 
-     " by process ", getLabel(this), 
-     " running on host ", System$getHostname(), 
-     " by user ", System$getUsername(), ".", sep="");
-  s <- paste(s, " Software: ", base::R.version.string, ".", sep="");
-  write(file=this$.lock, s);           # Write tracking info for debugging
+  # Write tracking info for debugging
+  write(file=this$.lock, s);
 
   log && cat(log, "Job successfully locked.");
 
@@ -1599,7 +1604,7 @@ setMethodS3("unlock", "Job", function(this, ...) {
 #
 # @keyword programming
 #**/#######################################################################
-setMethodS3("sourceHotCode", "Job", function(this, remove=TRUE, envir=this$.env, ...) {
+setMethodS3("sourceHotCode", "Job", function(this, remove=TRUE, envir=getEnvironment(this), ...) {
   # Source the code in the src/hot/ directory.
   hotPath <- filePath(getRoot(this), "src", "hot", expandLinks="any");
   files1 <- sourceDirectoryWithPreprocessor(this, 
@@ -1714,11 +1719,7 @@ setMethodS3("sourceDirectoryWithPreprocessor", "Job", function(this, ...) {
 # @keyword programming
 #**/#######################################################################
 setMethodS3("setup", "Job", function(this, ...) {
-  # Hmmm, here I actually do a hack and use this$.env as if it is
-  # public and well document, but it isn't. Maybe, there should
-  # be a getEnvironment() for the Object class? /HB 2005-02-18
-  envir <- this$.env;
-
+  envir <- getEnvironment(this);
 
   touch(this);
 
@@ -1956,7 +1957,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
       eval(substitute(
         onReset(this), 
         list(this=this))
-      , envir=this$.env);
+      , envir=getEnvironment(this));
 
       log && popState(log);
       log && warnings(log);
@@ -2003,7 +2004,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
       eval(substitute(
         onRestart(this, fields=fields), 
         list(this=this))
-      , envir=this$.env);
+      , envir=getEnvironment(this));
 
       log && popState(log);
       log && warnings(log);
@@ -2031,7 +2032,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     eval(substitute(
       onStart(this), 
       list(this=this))
-    , envir=this$.env);
+    , envir=getEnvironment(this));
 
     log && popState(log);
     log && warnings(log);
@@ -2057,7 +2058,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     eval(substitute(
       onRun(this), 
       list(this=this))
-    , envir=this$.env);
+    , envir=getEnvironment(this));
 
     log && popState(log);
     log && warnings(log);
@@ -2087,7 +2088,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     eval(substitute(
       onInterrupt(this, interrupt), 
       list(this=this, interrupt=interrupt))
-    , envir=this$.env);
+    , envir=getEnvironment(this));
 
     log && popState(log);
     log && warnings(log);
@@ -2123,7 +2124,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
     eval(substitute(
       onError(this, error), 
       list(this=this, error=ex))
-    , envir=this$.env);
+    , envir=getEnvironment(this));
 
     log && popState(log);
     log && warnings(log);
@@ -2149,7 +2150,7 @@ setMethodS3("run", "Job", function(this, reset=FALSE, sink=TRUE, ...) {
       eval(substitute(
         onFinally(this), 
         list(this=this))
-      , envir=this$.env);
+      , envir=getEnvironment(this));
 
       log && popState(log);
       log && warnings(log);
@@ -2619,6 +2620,10 @@ setMethodS3("unsink", "Job", function(this, output=TRUE, message=TRUE, ...) {
 
 ###########################################################################
 # HISTORY: 
+# 2012-05-16
+# o ROBUSTNESS: Decreased the risk for lock() of Job getting a lock file
+#   although it was just acquired by another node on the same file system.
+# o Using getEnvironment(this) instead of this$.env for Object:s.
 # 2009-06-06
 # o BUG FIX: "Unnamed" argument 'list' in all substitute(..., list=...). 
 # 2006-09-12

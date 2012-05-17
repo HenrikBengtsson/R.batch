@@ -45,7 +45,7 @@
  \code{\link[R.batch:setup.Job]{*setup}()} on startup.
 }
 
-\usage{\method{sourceHotCode}{Job}(this, remove=TRUE, envir=this$.env, ...)}
+\usage{\method{sourceHotCode}{Job}(this, remove=TRUE, envir=getEnvironment(this), ...)}
 
 \arguments{
  \item{remove}{If \code{\link[base:logical]{TRUE}}, hot patch files will be removed after being
