@@ -58,39 +58,35 @@ onRun <- function(job, ...) {
 
   save(mandelbrotSet, file=pathname);
 
-  if (!is.null(pngDevice)) {
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Generate images
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    images <- list(
-     topo=64, 
-     terrain=99, 
-     heat=64, 
-     rainbow=77, 
-     cm=30, 
-     gray=30, 
-     zebra=30, 
-     "b&w"=30
-    );
-  
-    # For each color type and number of color levels...
-    for (kk in seq(images)) {
-      # Hot-plugins
-      sourceHotCode(job);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Generate images
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  images <- list(
+   topo=64, 
+   terrain=99, 
+   heat=64, 
+   rainbow=77, 
+   cm=30, 
+   gray=30, 
+   zebra=30, 
+   "b&w"=30
+  );
 
-      colorType <- names(images)[kk];
-      nbrOfColors <- as.integer(images[[kk]]);
-      imageName <- sprintf("%s_%s-%d_%dx%d", mandelbrotName, 
-                                             colorType, nbrOfColors, nx, nx);
-      filename <- paste(imageName, ".png", sep="");
-      pathname <- file.path(getOutputPath(job), filename);
-  
-      cat("Creating image file:", pathname);
-      pngDevice(pathname, width=width, height=height);
+  # For each color type and number of color levels...
+  for (kk in seq(images)) {
+    # Hot-plugins
+    sourceHotCode(job);
+
+    colorType <- names(images)[kk];
+    nbrOfColors <- as.integer(images[[kk]]);
+    imageName <- sprintf("%s_%s-%d_%dx%d", mandelbrotName, 
+                                           colorType, nbrOfColors, nx, nx);
+
+    printf("Creating image: %s\n", imageName);
+    toPNG(imageName, path=getOutputPath(job), {
       iterImage(fit, n.col=nbrOfColors, col.type=colorType, tit=title);
-      dev.off();
-  
-      cat("\n");
-    }
-  } # if (!is.null(png))
-}
+    });
+
+    cat("\n");
+  } # for (kk ...)
+} # onRun()

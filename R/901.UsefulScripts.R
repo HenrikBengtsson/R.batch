@@ -24,11 +24,11 @@
 #  To add this automatically to the Windows search PATH, you can 
 #  call the following in your Windows Command line startup script:
 #  \preformatted{
-#     Rterm --slave -e "cat(system.file('bin', package='R.batch'))" > %TEMP%\DIR.tmp
-#     for /F "delims=" %%G in (%TEMP%\DIR.tmp) do set dir=%%~sG
-#     IF EXIST "%dir%" (
+#     Rterm --slave -e "cat(system.file('bin', package='R.batch'))" > \%TEMP\%\DIR.tmp
+#     for /F "delims=" \%\%G in (\%TEMP\%\DIR.tmp) do set dir=\%\%~sG
+#     IF EXIST "\%dir\%" (
 #       echo Detected R.batch package - added to the search path.
-#       path %PATH%;%dir%
+#       path \%PATH\%;\%dir\%
 #     )
 #   }
 # }
@@ -55,7 +55,7 @@
 #     dir=`R --slave -e "cat(system.file('bin', package='R.batch'))"`
 #     if test -d "${dir}" (
 #       echo Detected R.batch package - added to the search path.
-#       setenv path=${path};${dir}
+#       setenv PATH=${PATH};${dir}
 #     )
 #   }
 # }

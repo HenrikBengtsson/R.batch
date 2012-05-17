@@ -5,7 +5,9 @@
 ######################################################################
 
 # Load necessary packages
-library(R.oo); # Actually already loaded, but just to give an example.
+library("R.oo");
+library("R.devices");
+
 
 
 

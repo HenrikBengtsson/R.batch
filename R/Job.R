@@ -1154,7 +1154,7 @@ setMethodS3("wasSuccessful", "Job", function(this, ...) {
 # @title "Checks if the job failed"
 #
 # \description{
-#  @get "title" either during its main loop or duing it finalization.
+#  @get "title" either during its main loop or during it finalization.
 # }
 #
 # @synopsis
@@ -1223,7 +1223,7 @@ setMethodS3("isErroneous", "Job", function(this, ...) {
 # @title "Checks if the job was interrupted"
 #
 # \description{
-#  @get "title" either during its main loop or duing it finalization.
+#  @get "title" either during its main loop or during it finalization.
 # }
 #
 # @synopsis

@@ -16,7 +16,7 @@
 \title{Checks if the job failed}
 
 \description{
- Checks if the job failed either during its main loop or duing it finalization.
+ Checks if the job failed either during its main loop or during it finalization.
 }
 
 \usage{\method{hasFailed}{Job}(this, ...)}

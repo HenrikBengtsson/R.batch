@@ -3,15 +3,15 @@
 ##################################################################
 # RJobBatchServer
 # 
-# Options: See help(main.JobBatch) for details.
+# Options: See help("main.JobBatch") for details.
 # 
 # Shell script to run R one batch job utilizing R.batch.
 #
-# Author: Henrik Bengtsson, 2005
+# Author: Henrik Bengtsson, 2005-2012
 ##################################################################
 
 # Create R script to start JobBatch$main() in the R.batch package.
-echo 'library(R.batch); JobBatch$main(root="~/jobs/", maxJobs=Inf, details=-100, clean=TRUE);' > /tmp/JobBatchMain.R
+echo 'R.batch::JobBatch$main(root="~/jobs/", maxJobs=Inf, details=-100, clean=TRUE)' > /tmp/JobBatchMain.R
 
 # Start the R script and pass command line options
 R --vanilla --args $* < /tmp/JobBatchMain.R

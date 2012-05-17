@@ -16,7 +16,7 @@
 \title{Checks if the job was interrupted}
 
 \description{
- Checks if the job was interrupted either during its main loop or duing it finalization.
+ Checks if the job was interrupted either during its main loop or during it finalization.
 }
 
 \usage{\method{wasInterrupted}{Job}(this, ...)}

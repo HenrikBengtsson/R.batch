@@ -5,6 +5,5 @@
 # onFinally() function will always be called.
 ####################################################################
 onFinally <- function(...) {
-  # Close all devices, if open. 
-  graphics.off();
+  # Add an finalizing code here, e.g. closing open connections.
 }

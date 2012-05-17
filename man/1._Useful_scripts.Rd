@@ -33,15 +33,15 @@ echo off
 rem ##################################################################
 rem # RJobBatch
 rem #
-rem # Options: See help(main.JobBatch) for details.
+rem # Options: See help("main.JobBatch") for details.
 rem #
 rem # Windows script to run R one batch job utilizing R.batch.
 rem #
-rem # Author: Henrik Bengtsson, 2005
+rem # Author: Henrik Bengtsson, 2005-2012
 rem ##################################################################
 
 rem # Create R script to start JobBatch$main() in the R.batch package.
-echo library(R.batch); JobBatch$main(); > "\%TEMP\%\JobBatchMain.R"
+echo R.batch::JobBatch$main() > "\%TEMP\%\JobBatchMain.R"
 
 rem # Start the R script and pass command line options
 Rterm --vanilla --args \%1 \%2 \%3 \%4 \%5 \%6 \%7 \%8 \%9 < "\%TEMP\%\JobBatchMain.R"
@@ -54,11 +54,11 @@ del "\%TEMP\%\JobBatchMain.R"
  To add this automatically to the Windows search PATH, you can
  call the following in your Windows Command line startup script:
  \preformatted{
-    Rterm --slave -e "cat(system.file('bin', package='R.batch'))" > %TEMP%\DIR.tmp
-    for /F "delims=" %%G in (%TEMP%\DIR.tmp) do set dir=%%~sG
-    IF EXIST "%dir%" (
+    Rterm --slave -e "cat(system.file('bin', package='R.batch'))" > \%TEMP\%\DIR.tmp
+    for /F "delims=" \%\%G in (\%TEMP\%\DIR.tmp) do set dir=\%\%~sG
+    IF EXIST "\%dir\%" (
       echo Detected R.batch package - added to the search path.
-      path %PATH%;%dir%
+      path \%PATH\%;\%dir\%
     )
   }
 }
@@ -81,15 +81,15 @@ del "\%TEMP\%\JobBatchMain.R"
 ##################################################################
 # RJobBatch
 #
-# Options: See help(main.JobBatch) for details.
+# Options: See help("main.JobBatch") for details.
 #
 # Shell script to run R one batch job utilizing R.batch.
 #
-# Author: Henrik Bengtsson, 2005
+# Author: Henrik Bengtsson, 2005-2012
 ##################################################################
 
 # Create R script to start JobBatch$main() in the R.batch package.
-echo 'library(R.batch); JobBatch$main();' > /tmp/JobBatchMain.R
+echo 'R.batch::JobBatch$main()' > /tmp/JobBatchMain.R
 
 # Start the R script and pass command line options
 R --vanilla --args $* < /tmp/JobBatchMain.R
@@ -105,7 +105,7 @@ rm /tmp/JobBatchMain.R
     dir=`R --slave -e "cat(system.file('bin', package='R.batch'))"`
     if test -d "${dir}" (
       echo Detected R.batch package - added to the search path.
-      setenv path=${path};${dir}
+      setenv PATH=${PATH};${dir}
     )
   }
 }
