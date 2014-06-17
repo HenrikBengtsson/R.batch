@@ -9,9 +9,7 @@
 \name{sourceHotCode.Job}
 \alias{sourceHotCode.Job}
 \alias{Job.sourceHotCode}
-\alias{sourceHotCode.Job}
 \alias{sourceHotCode,Job-method}
-
 
 \title{Sources and removes code in the hot/ and src/hot/ directories}
 
@@ -45,7 +43,9 @@
  \code{\link[R.batch:setup.Job]{*setup}()} on startup.
 }
 
-\usage{\method{sourceHotCode}{Job}(this, remove=TRUE, envir=getEnvironment(this), ...)}
+\usage{
+\method{sourceHotCode}{Job}(this, remove=TRUE, envir=getEnvironment(this), ...)
+}
 
 \arguments{
  \item{remove}{If \code{\link[base:logical]{TRUE}}, hot patch files will be removed after being
@@ -69,7 +69,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

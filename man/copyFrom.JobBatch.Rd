@@ -9,9 +9,7 @@
 \name{copyFrom.JobBatch}
 \alias{copyFrom.JobBatch}
 \alias{JobBatch.copyFrom}
-\alias{copyFrom.JobBatch}
 \alias{copyFrom,JobBatch-method}
-
 
 \title{Copies a job batch directory into this one}
 
@@ -19,7 +17,9 @@
  Copies a job batch directory into this one.
 }
 
-\usage{\method{copyFrom}{JobBatch}(this, batch, conflicts=c("skip", "overwrite", "error"), ...)}
+\usage{
+\method{copyFrom}{JobBatch}(this, batch, conflicts=c("skip", "overwrite", "error"), ...)
+}
 
 \arguments{
  \item{batch}{Another \code{\link{JobBatch}} object.}
@@ -38,7 +38,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

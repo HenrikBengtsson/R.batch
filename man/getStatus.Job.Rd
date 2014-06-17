@@ -9,9 +9,7 @@
 \name{getStatus.Job}
 \alias{getStatus.Job}
 \alias{Job.getStatus}
-\alias{getStatus.Job}
 \alias{getStatus,Job-method}
-
 
 \title{Gets the status of the job}
 
@@ -19,7 +17,9 @@
  Gets the status of the job.
 }
 
-\usage{\method{getStatus}{Job}(this, ...)}
+\usage{
+\method{getStatus}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -34,7 +34,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

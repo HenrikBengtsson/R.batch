@@ -9,9 +9,7 @@
 \name{getSummary.JobBatch}
 \alias{getSummary.JobBatch}
 \alias{JobBatch.getSummary}
-\alias{getSummary.JobBatch}
 \alias{getSummary,JobBatch-method}
-
 
 \title{Gets a summary of the jobs directory}
 
@@ -19,7 +17,9 @@
  Gets a summary of the jobs directory.
 }
 
-\usage{\method{getSummary}{JobBatch}(this, ...)}
+\usage{
+\method{getSummary}{JobBatch}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

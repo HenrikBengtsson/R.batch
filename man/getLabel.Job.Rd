@@ -9,9 +9,7 @@
 \name{getLabel.Job}
 \alias{getLabel.Job}
 \alias{Job.getLabel}
-\alias{getLabel.Job}
 \alias{getLabel,Job-method}
-
 
 \title{Gets the label of the job}
 
@@ -22,7 +20,9 @@
  \code{<jobname>_<user>@<host>} will be returned.
 }
 
-\usage{\method{getLabel}{Job}(this, ...)}
+\usage{
+\method{getLabel}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -37,7 +37,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

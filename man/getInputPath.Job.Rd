@@ -9,9 +9,7 @@
  \name{getInputPath.Job}
 \alias{getInputPath.Job}
 \alias{Job.getInputPath}
-\alias{getInputPath.Job}
 \alias{getInputPath,Job-method}
-
 
  \title{Gets the input path of the job}
 
@@ -27,7 +25,9 @@
   the output of various other batch jobs via links.
  }
 
- \usage{\method{getInputPath}{Job}(this, index=1, ...)}
+ \usage{
+\method{getInputPath}{Job}(this, index=1, ...)
+}
 
  \arguments{
   \item{index}{An \code{\link[base]{integer}} specifying which input path to query.}
@@ -42,7 +42,7 @@
    For more information see \code{\link{Job}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

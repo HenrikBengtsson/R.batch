@@ -6,12 +6,11 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{main.JobBatch}
+\name{JobBatch$main}
+\alias{JobBatch$main}
 \alias{main.JobBatch}
 \alias{JobBatch.main}
-\alias{main.JobBatch}
 \alias{main,JobBatch-method}
-
 
 \title{Static method to be called from the command line}
 
@@ -46,8 +45,15 @@
  To run this from the command line, see \code{\link{1. Useful scripts}}.
 }
 
-\synopsis{main.JobBatch(static, root="jobs", reset=FALSE, sink=TRUE, details=FALSE, maxJobs=1, sleepTime=15, clean=FALSE, ...)}
-\usage{JobBatch$main(root="jobs", reset=FALSE, sink=TRUE, details=FALSE, maxJobs=1, sleepTime=15, clean=FALSE, ...)}
+\usage{
+## Static method (use this):
+## JobBatch$main(root="jobs", reset=FALSE, sink=TRUE, details=FALSE, maxJobs=1,
+##   sleepTime=15, clean=FALSE, ...)
+
+## Don't use the below:
+\method{main}{JobBatch}(static, root="jobs", reset=FALSE, sink=TRUE, details=FALSE, maxJobs=1, sleepTime=15,
+  clean=FALSE, ...)
+}
 
 \arguments{
  \item{root}{A \code{\link[base]{character}} string specifying the default value for the
@@ -79,7 +85,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

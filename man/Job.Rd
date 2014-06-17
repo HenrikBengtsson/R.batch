@@ -34,7 +34,9 @@ extends \link[R.oo]{Object}\cr
  A \code{Job} belongs to a \code{\link{JobBatch}}.
 }
 
-\usage{Job(jobPath=NULL, label=NULL, verbose=FALSE)}
+\usage{
+Job(jobPath=NULL, label=NULL, verbose=FALSE)
+}
 
 \arguments{
   \item{jobPath}{The job path.}
@@ -110,12 +112,12 @@ extends \link[R.oo]{Object}\cr
 
 
  \bold{Methods inherited from Object}:\cr
-$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
+$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, save
 
 
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{classes}

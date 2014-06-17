@@ -9,9 +9,7 @@
  \name{getPath.Job}
 \alias{getPath.Job}
 \alias{Job.getPath}
-\alias{getPath.Job}
 \alias{getPath,Job-method}
-
  \alias{Job.setPath}
 \alias{setPath.Job}
 \alias{setPath,Job-method}
@@ -23,7 +21,9 @@
   Gets the path to the job.
  }
 
- \usage{\method{getPath}{Job}(this, ...)}
+ \usage{
+\method{getPath}{Job}(this, ...)
+}
 
  \arguments{
   \item{...}{Not used.}
@@ -37,7 +37,7 @@
    For more information see \code{\link{Job}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

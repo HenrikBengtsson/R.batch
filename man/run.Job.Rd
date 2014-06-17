@@ -9,9 +9,7 @@
  \name{run.Job}
 \alias{run.Job}
 \alias{Job.run}
-\alias{run.Job}
 \alias{run,Job-method}
-
 
  \title{Runs the job}
 
@@ -19,7 +17,9 @@
   Runs the job.
  }
 
- \usage{\method{run}{Job}(this, reset=FALSE, sink=TRUE, ...)}
+ \usage{
+\method{run}{Job}(this, reset=FALSE, sink=TRUE, ...)
+}
 
  \arguments{
   \item{reset}{If \code{\link[base:logical]{TRUE}}, job is first reset, otherwise not.}
@@ -66,7 +66,7 @@
    For more information see \code{\link{Job}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

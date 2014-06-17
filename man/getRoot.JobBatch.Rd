@@ -9,9 +9,7 @@
  \name{getRoot.JobBatch}
 \alias{getRoot.JobBatch}
 \alias{JobBatch.getRoot}
-\alias{getRoot.JobBatch}
 \alias{getRoot,JobBatch-method}
-
  \alias{JobBatch.setRoot}
 \alias{setRoot.JobBatch}
 \alias{setRoot,JobBatch-method}
@@ -23,7 +21,9 @@
   Gets the root path of the job batch.
  }
 
- \usage{\method{getRoot}{JobBatch}(this, ...)}
+ \usage{
+\method{getRoot}{JobBatch}(this, ...)
+}
 
  \arguments{
   \item{...}{Not used.}
@@ -37,7 +37,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

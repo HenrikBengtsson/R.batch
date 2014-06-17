@@ -9,9 +9,7 @@
 \name{unlock.Job}
 \alias{unlock.Job}
 \alias{Job.unlock}
-\alias{unlock.Job}
 \alias{unlock,Job-method}
-
 
 \title{Unlocks the job}
 
@@ -23,7 +21,9 @@
  also be unlocked when deallocated (by the garbage collector), if locked.
 }
 
-\usage{\method{unlock}{Job}(this, ...)}
+\usage{
+\method{unlock}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -39,7 +39,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

@@ -9,9 +9,7 @@
 \name{wasInterrupted.Job}
 \alias{wasInterrupted.Job}
 \alias{Job.wasInterrupted}
-\alias{wasInterrupted.Job}
 \alias{wasInterrupted,Job-method}
-
 
 \title{Checks if the job was interrupted}
 
@@ -19,7 +17,9 @@
  Checks if the job was interrupted either during its main loop or during it finalization.
 }
 
-\usage{\method{wasInterrupted}{Job}(this, ...)}
+\usage{
+\method{wasInterrupted}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

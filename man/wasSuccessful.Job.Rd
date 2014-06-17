@@ -9,9 +9,7 @@
 \name{wasSuccessful.Job}
 \alias{wasSuccessful.Job}
 \alias{Job.wasSuccessful}
-\alias{wasSuccessful.Job}
 \alias{wasSuccessful,Job-method}
-
 
 \title{Checks if the job was completed successfully}
 
@@ -19,7 +17,9 @@
  Checks if the job was completed successfully.
 }
 
-\usage{\method{wasSuccessful}{Job}(this, ...)}
+\usage{
+\method{wasSuccessful}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

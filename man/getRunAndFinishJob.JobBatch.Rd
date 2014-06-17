@@ -9,9 +9,7 @@
 \name{getRunAndFinishJob.JobBatch}
 \alias{getRunAndFinishJob.JobBatch}
 \alias{JobBatch.getRunAndFinishJob}
-\alias{getRunAndFinishJob.JobBatch}
 \alias{getRunAndFinishJob,JobBatch-method}
-
 
 \title{Gets an non-locked job, process it and moves it to a final destination}
 
@@ -19,7 +17,10 @@
  Gets an non-locked job, process it and moves it to a final destination.
 }
 
-\usage{\method{getRunAndFinishJob}{JobBatch}(this, sink=TRUE, reset=FALSE, clean=FALSE, verbose=FALSE, .cleanup=NULL, ...)}
+\usage{
+\method{getRunAndFinishJob}{JobBatch}(this, sink=TRUE, reset=FALSE, clean=FALSE, verbose=FALSE,
+  .cleanup=NULL, ...)
+}
 
 \arguments{
  \item{reset}{If \code{\link[base:logical]{TRUE}}, the job is reset before processed.}
@@ -41,7 +42,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

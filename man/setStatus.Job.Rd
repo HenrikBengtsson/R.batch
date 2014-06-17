@@ -9,9 +9,7 @@
 \name{setStatus.Job}
 \alias{setStatus.Job}
 \alias{Job.setStatus}
-\alias{setStatus.Job}
 \alias{setStatus,Job-method}
-
 
 \title{Sets the status of the job}
 
@@ -19,7 +17,9 @@
  Sets the status of the job.
 }
 
-\usage{\method{setStatus}{Job}(this, status, ...)}
+\usage{
+\method{setStatus}{Job}(this, status, ...)
+}
 
 \arguments{
  \item{status}{A \code{\link[base]{character}} string.}
@@ -35,7 +35,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

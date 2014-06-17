@@ -9,9 +9,7 @@
 \name{isDone.Job}
 \alias{isDone.Job}
 \alias{Job.isDone}
-\alias{isDone.Job}
 \alias{isDone,Job-method}
-
 
 \title{Checks if the job is done}
 
@@ -20,7 +18,9 @@
  error or interrupt was detected.
 }
 
-\usage{\method{isDone}{Job}(this, ...)}
+\usage{
+\method{isDone}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -34,7 +34,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

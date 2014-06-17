@@ -9,9 +9,7 @@
 \name{unsink.Job}
 \alias{unsink.Job}
 \alias{Job.unsink}
-\alias{unsink.Job}
 \alias{unsink,Job-method}
-
 
 \title{Unsinks job output}
 
@@ -19,7 +17,9 @@
  Unsinks job output.
 }
 
-\usage{\method{unsink}{Job}(this, output=TRUE, message=TRUE, ...)}
+\usage{
+\method{unsink}{Job}(this, output=TRUE, message=TRUE, ...)
+}
 
 \arguments{
  \item{output}{If \code{\link[base:logical]{TRUE}}, standard output is unsinked, otherwise not.}
@@ -36,7 +36,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

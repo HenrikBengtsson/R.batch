@@ -9,9 +9,7 @@
  \name{showWarnings.Job}
 \alias{showWarnings.Job}
 \alias{Job.showWarnings}
-\alias{showWarnings.Job}
 \alias{showWarnings,Job-method}
-
 
  \title{Displays warning generated while running this job}
 
@@ -19,7 +17,9 @@
    Displays warning generated while running this job.
  }
 
- \usage{\method{showWarnings}{Job}(this, reset=TRUE, show=TRUE, ...)}
+ \usage{
+\method{showWarnings}{Job}(this, reset=TRUE, show=TRUE, ...)
+}
 
  \arguments{
   \item{reset}{If \code{\link[base:logical]{TRUE}}, warnings are removed after being viewed,
@@ -32,7 +32,7 @@
    Returns nothing.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    For more information see \code{\link{Job}}.

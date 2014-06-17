@@ -9,9 +9,7 @@
 \name{removeStoredImage.Job}
 \alias{removeStoredImage.Job}
 \alias{Job.removeStoredImage}
-\alias{removeStoredImage.Job}
 \alias{removeStoredImage,Job-method}
-
 
 \title{Removes stored job image}
 
@@ -19,7 +17,9 @@
  Removes stored job image, if exists.
 }
 
-\usage{\method{removeStoredImage}{Job}(this, ...)}
+\usage{
+\method{removeStoredImage}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -36,7 +36,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

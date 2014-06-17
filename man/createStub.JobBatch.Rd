@@ -9,9 +9,7 @@
 \name{createStub.JobBatch}
 \alias{createStub.JobBatch}
 \alias{JobBatch.createStub}
-\alias{createStub.JobBatch}
 \alias{createStub,JobBatch-method}
-
 
 \title{Creates a jobs directory structure stub}
 
@@ -19,7 +17,9 @@
  Creates a jobs directory structure stub.
 }
 
-\usage{\method{createStub}{JobBatch}(this, ...)}
+\usage{
+\method{createStub}{JobBatch}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

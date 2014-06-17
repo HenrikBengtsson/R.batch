@@ -9,9 +9,7 @@
 \name{isSinked.Job}
 \alias{isSinked.Job}
 \alias{Job.isSinked}
-\alias{isSinked.Job}
 \alias{isSinked,Job-method}
-
 
 \title{Checks if job output is sinked to file}
 
@@ -19,7 +17,9 @@
  Checks if job output is sinked to file.
 }
 
-\usage{\method{isSinked}{Job}(this, ...)}
+\usage{
+\method{isSinked}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -34,7 +34,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

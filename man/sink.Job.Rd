@@ -9,9 +9,7 @@
 \name{sink.Job}
 \alias{sink.Job}
 \alias{Job.sink}
-\alias{sink.Job}
 \alias{sink,Job-method}
-
 
 \title{Sinks job output}
 
@@ -19,7 +17,9 @@
  Sinks job output.
 }
 
-\usage{\method{sink}{Job}(this, output=TRUE, message=TRUE, split=TRUE, path=getOutputPath(this), ...)}
+\usage{
+\method{sink}{Job}(this, output=TRUE, message=TRUE, split=TRUE, path=getOutputPath(this), ...)
+}
 
 \arguments{
  \item{output}{If \code{\link[base:logical]{TRUE}}, standard output is sinked, otherwise not.}
@@ -41,7 +41,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

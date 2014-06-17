@@ -9,9 +9,7 @@
  \name{equals.Job}
 \alias{equals.Job}
 \alias{Job.equals}
-\alias{equals.Job}
 \alias{equals,Job-method}
-
 
  \title{Checks if this job equals another}
 
@@ -19,7 +17,9 @@
    Checks if this job equals another.
  }
 
- \usage{\method{equals}{Job}(this, other, ...)}
+ \usage{
+\method{equals}{Job}(this, other, ...)
+}
 
  \arguments{
   \item{other}{Another Job.}
@@ -36,7 +36,7 @@
   compared with \code{\link[base]{identical}}().
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    For more information see \code{\link{Job}}.

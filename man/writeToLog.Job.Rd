@@ -9,9 +9,7 @@
 \name{writeToLog.Job}
 \alias{writeToLog.Job}
 \alias{Job.writeToLog}
-\alias{writeToLog.Job}
 \alias{writeToLog,Job-method}
-
 
 \title{Writes to log file}
 
@@ -19,7 +17,9 @@
  Writes to log file.
 }
 
-\usage{\method{writeToLog}{Job}(this, ..., collapse=" ")}
+\usage{
+\method{writeToLog}{Job}(this, ..., collapse=" ")
+}
 
 \arguments{
  \item{...}{Arguments passed to the \code{\link[R.utils]{cat.Verbose}} method.}
@@ -35,7 +35,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

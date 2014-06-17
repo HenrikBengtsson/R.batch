@@ -9,9 +9,7 @@
  \name{moveJobTo.JobBatch}
 \alias{moveJobTo.JobBatch}
 \alias{JobBatch.moveJobTo}
-\alias{moveJobTo.JobBatch}
 \alias{moveJobTo,JobBatch-method}
-
 
  \title{Moves the job to another directory}
 
@@ -19,7 +17,10 @@
   Moves the job to another directory.
  }
 
- \usage{\method{moveJobTo}{JobBatch}(this, job, dest=c("todo", "running", "finished", "failed", "interrupted", "erroneous"), ...)}
+ \usage{
+\method{moveJobTo}{JobBatch}(this, job, dest=c("todo", "running", "finished", "failed",
+  "interrupted", "erroneous"), ...)
+}
 
  \arguments{
   \item{dest}{A \code{\link[base]{character}} string specifying the destination directory
@@ -40,7 +41,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

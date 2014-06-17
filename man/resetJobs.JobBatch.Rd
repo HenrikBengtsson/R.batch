@@ -9,9 +9,7 @@
  \name{resetJobs.JobBatch}
 \alias{resetJobs.JobBatch}
 \alias{JobBatch.resetJobs}
-\alias{resetJobs.JobBatch}
 \alias{resetJobs,JobBatch-method}
-
 
  \title{Resets Jobs in the job batch}
 
@@ -20,7 +18,9 @@
   directory.
  }
 
- \usage{\method{resetJobs}{JobBatch}(this, jobs=NULL, ...)}
+ \usage{
+\method{resetJobs}{JobBatch}(this, jobs=NULL, ...)
+}
 
  \arguments{
   \item{jobs}{A \code{\link[base]{list}} of Jobs or a single Job to be reset.}
@@ -40,7 +40,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

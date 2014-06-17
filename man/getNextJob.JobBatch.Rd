@@ -9,9 +9,7 @@
  \name{getNextJob.JobBatch}
 \alias{getNextJob.JobBatch}
 \alias{JobBatch.getNextJob}
-\alias{getNextJob.JobBatch}
 \alias{getNextJob,JobBatch-method}
-
 
  \title{Gets next non-locked job}
 
@@ -21,7 +19,9 @@
   This method is called by \code{\link[R.batch:getRunAndFinishJob.JobBatch]{*getRunAndFinishJob}()}.
  }
 
- \usage{\method{getNextJob}{JobBatch}(this, which=c("first", "last", "random"), ..., verbose=FALSE)}
+ \usage{
+\method{getNextJob}{JobBatch}(this, which=c("first", "last", "random"), ..., verbose=FALSE)
+}
 
  \arguments{
   \item{which}{A \code{\link[base]{character}} string. The jobs are sorted in lexicographical
@@ -45,7 +45,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

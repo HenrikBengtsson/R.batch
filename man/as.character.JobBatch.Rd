@@ -9,9 +9,7 @@
  \name{as.character.JobBatch}
 \alias{as.character.JobBatch}
 \alias{JobBatch.as.character}
-\alias{as.character.JobBatch}
 \alias{as.character,JobBatch-method}
-
 
  \title{Gets a character string representation of the job batch}
 
@@ -19,7 +17,9 @@
   Gets a character string representation of the job batch.
  }
 
- \usage{\method{as.character}{JobBatch}(x, ...)}
+ \usage{
+\method{as.character}{JobBatch}(x, ...)
+}
 
  \arguments{
   \item{...}{Not used.}
@@ -33,7 +33,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

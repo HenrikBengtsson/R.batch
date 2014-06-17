@@ -9,9 +9,7 @@
 \name{hasStoredImage.Job}
 \alias{hasStoredImage.Job}
 \alias{Job.hasStoredImage}
-\alias{hasStoredImage.Job}
 \alias{hasStoredImage,Job-method}
-
 
 \title{Checks if a stored job image exists}
 
@@ -19,7 +17,9 @@
  Checks if a stored job image exists.
 }
 
-\usage{\method{hasStoredImage}{Job}(this, ...)}
+\usage{
+\method{hasStoredImage}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -36,7 +36,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

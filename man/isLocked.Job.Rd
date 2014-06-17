@@ -9,9 +9,7 @@
 \name{isLocked.Job}
 \alias{isLocked.Job}
 \alias{Job.isLocked}
-\alias{isLocked.Job}
 \alias{isLocked,Job-method}
-
 
 \title{Checks if a job is locked}
 
@@ -22,7 +20,9 @@
   before checking in order to avoid forgotten or false lock files.
 }
 
-\usage{\method{isLocked}{Job}(this, ...)}
+\usage{
+\method{isLocked}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -37,7 +37,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

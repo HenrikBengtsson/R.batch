@@ -9,9 +9,7 @@
 \name{isExisting.Job}
 \alias{isExisting.Job}
 \alias{Job.isExisting}
-\alias{isExisting.Job}
 \alias{isExisting,Job-method}
-
 
 \title{Checks if the job exists}
 
@@ -19,7 +17,9 @@
  Checks if the job exists. A job exists if the job directory exists.
 }
 
-\usage{\method{isExisting}{Job}(this, ...)}
+\usage{
+\method{isExisting}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

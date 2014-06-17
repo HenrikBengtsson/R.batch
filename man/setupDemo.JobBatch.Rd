@@ -6,12 +6,11 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{setupDemo.JobBatch}
+\name{JobBatch$setupDemo}
+\alias{JobBatch$setupDemo}
 \alias{setupDemo.JobBatch}
 \alias{JobBatch.setupDemo}
-\alias{setupDemo.JobBatch}
 \alias{setupDemo,JobBatch-method}
-
 
 \title{Static method to setup a demo job batch directory structure}
 
@@ -19,8 +18,13 @@
  Static method to setup a demo job batch directory structure.
 }
 
-\synopsis{setupDemo.JobBatch(static, demo=c("mandelbrot"), overwrite=FALSE, ...)}
-\usage{JobBatch$setupDemo(demo=c("mandelbrot"), overwrite=FALSE, ...)}
+\usage{
+## Static method (use this):
+## JobBatch$setupDemo(demo=c("mandelbrot"), overwrite=FALSE, ...)
+
+## Don't use the below:
+\method{setupDemo}{JobBatch}(static, demo=c("mandelbrot"), overwrite=FALSE, ...)
+}
 
 \arguments{
  \item{demo}{The demo to be setup.}
@@ -44,7 +48,7 @@
   for details.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 

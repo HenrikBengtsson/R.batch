@@ -9,9 +9,7 @@
 \name{lock.Job}
 \alias{lock.Job}
 \alias{Job.lock}
-\alias{lock.Job}
 \alias{lock,Job-method}
-
 
 \title{Locks the job}
 
@@ -20,7 +18,9 @@
  lock and run the same job code.
 }
 
-\usage{\method{lock}{Job}(this, ...)}
+\usage{
+\method{lock}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -36,7 +36,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

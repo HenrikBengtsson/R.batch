@@ -36,7 +36,9 @@ extends \link[R.oo]{Object}\cr
   The \code{\link{Job}} class is only to investigate details about a specific job.
  }
 
- \usage{JobBatch(root="jobs", ...)}
+ \usage{
+JobBatch(root="jobs", ...)
+}
 
  \arguments{
   \item{root}{A name of a job root directory.}
@@ -78,7 +80,7 @@ extends \link[R.oo]{Object}\cr
 
 
  \bold{Methods inherited from Object}:\cr
-$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
+$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, save
 
 
  }
@@ -169,7 +171,7 @@ for (name in names(expected)) {
 cat("Validation JobBatch results...done\n");
 }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{classes}

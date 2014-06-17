@@ -9,9 +9,7 @@
 \name{setup.Job}
 \alias{setup.Job}
 \alias{Job.setup}
-\alias{setup.Job}
 \alias{setup,Job-method}
-
 
 \title{Initiates the job}
 
@@ -22,7 +20,9 @@
  This method is called by \code{\link[R.batch:run.Job]{*run}()}.
 }
 
-\usage{\method{setup}{Job}(this, ...)}
+\usage{
+\method{setup}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -43,7 +43,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

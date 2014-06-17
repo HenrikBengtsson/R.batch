@@ -6,12 +6,11 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{checkRequirements.JobBatch}
+ \name{JobBatch$checkRequirements}
+\alias{JobBatch$checkRequirements}
 \alias{checkRequirements.JobBatch}
 \alias{JobBatch.checkRequirements}
-\alias{checkRequirements.JobBatch}
 \alias{checkRequirements,JobBatch-method}
-
 
  \title{Checks that requirements are fulfilled or not}
 
@@ -21,8 +20,13 @@
   This method is called by \code{\link[R.batch:getNextJob.JobBatch]{*getNextJob}()}.
  }
 
- \synopsis{checkRequirements.JobBatch(static, path, ...)}
-\usage{JobBatch$checkRequirements(path, ...)}
+ \usage{
+## Static method (use this):
+## JobBatch$checkRequirements(path, ...)
+
+## Don't use the below:
+\method{checkRequirements}{JobBatch}(static, path, ...)
+}
 
  \arguments{
   \item{path}{A \code{\link[base]{character}} string of the path where to search for
@@ -39,7 +43,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

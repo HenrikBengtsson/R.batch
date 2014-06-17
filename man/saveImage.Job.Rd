@@ -9,9 +9,7 @@
 \name{saveImage.Job}
 \alias{saveImage.Job}
 \alias{Job.saveImage}
-\alias{saveImage.Job}
 \alias{saveImage,Job-method}
-
 
 \title{Save an image of the job}
 
@@ -19,7 +17,9 @@
  Save an image of the job.
 }
 
-\usage{\method{saveImage}{Job}(this, label=getLabel(this), ...)}
+\usage{
+\method{saveImage}{Job}(this, label=getLabel(this), ...)
+}
 
 \arguments{
  \item{label}{A \code{\link[base]{character}} string to be used in the filename.}
@@ -37,7 +37,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

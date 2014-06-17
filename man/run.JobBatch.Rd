@@ -9,9 +9,7 @@
 \name{run.JobBatch}
 \alias{run.JobBatch}
 \alias{JobBatch.run}
-\alias{run.JobBatch}
 \alias{run,JobBatch-method}
-
 
 \title{Process some or all jobs available}
 
@@ -24,7 +22,9 @@
  process.
 }
 
-\usage{\method{run}{JobBatch}(this, maxJobs=-1, sleepTime=15, clean=FALSE, ..., verbose=FALSE)}
+\usage{
+\method{run}{JobBatch}(this, maxJobs=-1, sleepTime=15, clean=FALSE, ..., verbose=FALSE)
+}
 
 \arguments{
  \item{maxJobs}{The maximum number of jobs to be processed.
@@ -47,7 +47,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

@@ -9,9 +9,7 @@
 \name{hasFailed.Job}
 \alias{hasFailed.Job}
 \alias{Job.hasFailed}
-\alias{hasFailed.Job}
 \alias{hasFailed,Job-method}
-
 
 \title{Checks if the job failed}
 
@@ -19,7 +17,9 @@
  Checks if the job failed either during its main loop or during it finalization.
 }
 
-\usage{\method{hasFailed}{Job}(this, ...)}
+\usage{
+\method{hasFailed}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

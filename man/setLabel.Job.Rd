@@ -9,9 +9,7 @@
 \name{setLabel.Job}
 \alias{setLabel.Job}
 \alias{Job.setLabel}
-\alias{setLabel.Job}
 \alias{setLabel,Job-method}
-
 
 \title{Sets the label of the job}
 
@@ -19,7 +17,9 @@
  Sets the label of the job.
 }
 
-\usage{\method{setLabel}{Job}(this, label=NULL, ...)}
+\usage{
+\method{setLabel}{Job}(this, label=NULL, ...)
+}
 
 \arguments{
  \item{label}{A \code{\link[base]{character}} string. If \code{\link[base]{NULL}}, label is reset.}
@@ -34,7 +34,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

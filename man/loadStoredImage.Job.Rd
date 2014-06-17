@@ -9,9 +9,7 @@
 \name{loadStoredImage.Job}
 \alias{loadStoredImage.Job}
 \alias{Job.loadStoredImage}
-\alias{loadStoredImage.Job}
 \alias{loadStoredImage,Job-method}
-
 
 \title{Reload a stored job image}
 
@@ -19,7 +17,9 @@
  Reload a stored job image, if exists.
 }
 
-\usage{\method{loadStoredImage}{Job}(this, cleanup=TRUE, ...)}
+\usage{
+\method{loadStoredImage}{Job}(this, cleanup=TRUE, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -35,7 +35,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

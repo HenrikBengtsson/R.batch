@@ -9,9 +9,7 @@
 \name{clean.JobBatch}
 \alias{clean.JobBatch}
 \alias{JobBatch.clean}
-\alias{clean.JobBatch}
 \alias{clean,JobBatch-method}
-
 
 \title{Cleans up among jobs in this JobBatch}
 
@@ -37,7 +35,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

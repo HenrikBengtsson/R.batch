@@ -9,9 +9,7 @@
 \name{findJobs.JobBatch}
 \alias{findJobs.JobBatch}
 \alias{JobBatch.findJobs}
-\alias{findJobs.JobBatch}
 \alias{findJobs,JobBatch-method}
-
 
 \title{Searches by name for Job:s in this JobBatch}
 
@@ -41,7 +39,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

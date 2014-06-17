@@ -9,9 +9,7 @@
 \name{resetLog.Job}
 \alias{resetLog.Job}
 \alias{Job.resetLog}
-\alias{resetLog.Job}
 \alias{resetLog,Job-method}
-
 
 \title{Reset log by removing log file}
 
@@ -19,7 +17,9 @@
  Reset log by removing log file.
 }
 
-\usage{\method{resetLog}{Job}(this, backup=TRUE, ...)}
+\usage{
+\method{resetLog}{Job}(this, backup=TRUE, ...)
+}
 
 \arguments{
  \item{backup}{If \code{\link[base:logical]{TRUE}}, log file is backuped before deleted.}
@@ -35,7 +35,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

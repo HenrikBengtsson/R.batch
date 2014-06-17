@@ -9,9 +9,7 @@
 \name{isErroneous.Job}
 \alias{isErroneous.Job}
 \alias{Job.isErroneous}
-\alias{isErroneous.Job}
 \alias{isErroneous,Job-method}
-
 
 \title{Checks if the job is erroneous}
 
@@ -21,7 +19,9 @@
  job directory contains errors.
 }
 
-\usage{\method{isErroneous}{Job}(this, ...)}
+\usage{
+\method{isErroneous}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -35,7 +35,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

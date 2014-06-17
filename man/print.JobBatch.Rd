@@ -9,9 +9,7 @@
 \name{print.JobBatch}
 \alias{print.JobBatch}
 \alias{JobBatch.print}
-\alias{print.JobBatch}
 \alias{print,JobBatch-method}
-
 
 \title{Prints a summary of the jobs directory}
 
@@ -19,7 +17,9 @@
  Prints a summary of the jobs directory.
 }
 
-\usage{\method{print}{JobBatch}(x, ...)}
+\usage{
+\method{print}{JobBatch}(x, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{JobBatch}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

@@ -9,9 +9,7 @@
 \name{finalize.Job}
 \alias{finalize.Job}
 \alias{Job.finalize}
-\alias{finalize.Job}
 \alias{finalize,Job-method}
-
 
 \title{Finalizes job}
 
@@ -19,7 +17,9 @@
  Finalizes job by unlocking it, if locked.
 }
 
-\usage{\method{finalize}{Job}(this, ...)}
+\usage{
+\method{finalize}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -33,7 +33,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

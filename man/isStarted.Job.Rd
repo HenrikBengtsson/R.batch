@@ -9,9 +9,7 @@
 \name{isStarted.Job}
 \alias{isStarted.Job}
 \alias{Job.isStarted}
-\alias{isStarted.Job}
 \alias{isStarted,Job-method}
-
 
 \title{Checks if the job is started or not}
 
@@ -19,7 +17,9 @@
  Checks if the job is started or not.
 }
 
-\usage{\method{isStarted}{Job}(this, ...)}
+\usage{
+\method{isStarted}{Job}(this, ...)
+}
 
 \arguments{
  \item{...}{Not used.}
@@ -34,7 +34,7 @@
   For more information see \code{\link{Job}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

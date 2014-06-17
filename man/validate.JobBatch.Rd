@@ -9,9 +9,7 @@
  \name{validate.JobBatch}
 \alias{validate.JobBatch}
 \alias{JobBatch.validate}
-\alias{validate.JobBatch}
 \alias{validate,JobBatch-method}
-
 
  \title{Validates the job batch}
 
@@ -20,7 +18,9 @@
   An exception is thrown if not valid.
  }
 
- \usage{\method{validate}{JobBatch}(this, ...)}
+ \usage{
+\method{validate}{JobBatch}(this, ...)
+}
 
  \arguments{
   \item{...}{Not used.}
@@ -34,7 +34,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}

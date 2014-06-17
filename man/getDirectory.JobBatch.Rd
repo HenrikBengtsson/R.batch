@@ -9,9 +9,7 @@
  \name{getDirectory.JobBatch}
 \alias{getDirectory.JobBatch}
 \alias{JobBatch.getDirectory}
-\alias{getDirectory.JobBatch}
 \alias{getDirectory,JobBatch-method}
-
  \alias{JobBatch.getTodoPath}
 \alias{getTodoPath.JobBatch}
 \alias{getTodoPath,JobBatch-method}
@@ -55,7 +53,10 @@
   Gets a subdirectory of the job batch.
  }
 
- \usage{\method{getDirectory}{JobBatch}(this, dir=c("todo", "running", "finished", "failed", "interrupted", "erroneous", "src", "input", "output"), ...)}
+ \usage{
+\method{getDirectory}{JobBatch}(this, dir=c("todo", "running", "finished", "failed",
+  "interrupted", "erroneous", "src", "input", "output"), ...)
+}
 
  \arguments{
   \item{dir}{A name of a subdirectory.}
@@ -70,7 +71,7 @@
    For more information see \code{\link{JobBatch}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
 
 \keyword{internal}
