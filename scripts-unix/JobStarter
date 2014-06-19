@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if test -f "${HOME}/.bashrc"; then
+  # Add RJobBatch to the PATH etc.
+  source ${HOME}/.bashrc
+fi
+
+export RBIN=/usr/bin/R
+case `uname -s` in
+  Linux)
+    export RBIN=/usr/common/bin/R
+    ;;
+  SunOS)
+    export RBIN=/opt/bin/R
+    ;;
+  CYGWIN_NT-5.1)
+    export RBIN=/pf/R/rw2001pat/bin/Rterm
+    ;;
+  *)
+    ;;
+esac;
+
+RJobBatch --root=${HOME}/jobs/
+

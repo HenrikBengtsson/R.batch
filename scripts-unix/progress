@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+###########################################################################
+# Lists the progress of all running jobs
+###########################################################################
+jobPath="${HOME}/Rjobs/jobs"
+runningPath="${jobPath}/running"
+
+ls -l ${runningPath}/*/.progress* | sed -e "s/^.*${USER} //g" | sed -e "s/^[ a-zA-Z]*//g" | sed -e "s/[/.]*progress[.]*[^@]*//g" | sed -e "s/_[0-9]*[.]txt$//g" | sed -e "s/[/].*[/]//g" | sed -e "s/job_//g" | sed -e "s/model/m/g" | sed -e "s/uniform/unif/g" > /tmp/.jobs.PROGRESS0
+
+BASH_OSTYPE=`uname -s`
+case ${BASH_OSTYPE} in
+  SunOS)
+    cp /tmp/.jobs.PROGRESS0 /tmp/.jobs.PROGRESS
+    ;;
+  *)
+    cat /tmp/.jobs.PROGRESS0 | sed -r -e 's/^([0-9]) /0\1 /g' > /tmp/.jobs.PROGRESS
+    ;;
+esac  
+
+cat /tmp/.jobs.PROGRESS | sort -r
+
+rm /tmp/.jobs.PROGRESS*
+

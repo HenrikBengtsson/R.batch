@@ -1,0 +1,829 @@
+#!/usr/bin/env bash
+
+## JobSlave v0.7 by Henrik Bengtsson, 2004.
+## 
+## Usage: JobSlave [options]
+## 
+## Options:
+##  -bash s        Run command on slave host in a bash environment.
+##  -details       List details about this slave. To be able to list all
+##                 running jobs, -script has to be specified (or default).
+##  -help          This page.
+##  -host          Show the host of this slave, i.e. the current computer.
+## *-interval n    Sets the interval in minutes to rerun this script. 
+##                 The default is to rerun this script every 10 minutes.
+##  -jobs          Lists all running jobs (normally only one). See -details.
+##  -kill          Asks this slave to stop (-stop), waits for 5 seconds, 
+##                 then kills (sends SIGTERM) remaining jobs. Queued
+##                 jobs remains. Option -stop is prefered.
+##  -njobs         Shows number of running jobs.
+##  -owner         Gets information about the user that is logged on to
+##                 the *console* of this slave host. Information about her
+##                 or his process is also listed.
+## *-pattern s     Job pattern of process name to be signaled to for -stop 
+##                 and -kill, or to be used when listing running jobs. If 
+##                 not specified, the environment variable JOBPATTERN is 
+##                 used, then the pattern file. Default is "JobStarter".
+## *-patternfile s Specify file containing job pattern. Default is file
+##                 ${HOME}/.jobs/JOBPATTERN.
+## *-queue c       Specify id of schedule queue (a-z,A-Z) to use. The 
+##                 Queues with  higher  letters  run  with  increased
+##                 niceness. Default is "a".
+##  -queued        Lists all queued tasks.
+##  -quiet         No output generated to stdout or stderr (if possible).
+##  -rules         Get rules for this slave.
+## *-script s      Specifies which script the slave should run each time.
+##                 By default 'JobStarter' is runned, which then must be
+##                 in the search path.
+## *-start         Quietly (-quiet) schedules future jobs and starts a 
+##                 new one if currently not running.
+##  -stop          Asks this slave to stop (sends SIGINT, i.e. Ctrl-C). 
+##                 Queued jobs remains.
+##  -stopfile      Check if stop file exists
+##  -top           Show information about non-system processes.
+##  -unqueue       Removes all queued tasks.
+##  -verbose       Outputs information. Overrides -run or -quiet.
+## 
+## Options with an asterix (*) are passed to queued future calls too.
+##
+## Calling this script with no options or with option -verbose alone, will
+## 1) queue this script to be rerun every 10 minutes, and 2) if no jobs
+## are running, start an new job. 
+## 
+## Example:
+## Write the date to ${HOME}/.date once in an hour (and when called);
+##  JobSlave -start -interval 60 -script "date > ${HOME}/.date"
+## Stop all running processes and remove all queued jobs
+##  JobSlave -stop 
+## 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# First, assert that this script is not called too often. If it is, it
+# could mean that the 'at' scheduling is broken; this has happended before
+# and we have been able to figure out why. For this reason we protect 
+# against by logging the time of the last and the second last call. 
+# If three calls occurs within 20 seconds, we will not execute the script.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+stop=0
+# Time in seconds since 00:00:00, Jan 1, 1970:
+# time=`date +%s` # not supported by all systems
+time=`date +%d%H%M%S`
+
+# Retrieve last time this script was called on this host (or unique /tmp/).
+lastTimeFile=/tmp/.JobSlave.lastTime
+
+if test -f ${lastTimeFile}; then
+  secondLastTimeFile=/tmp/.JobSlave.secondLastTime
+
+  lastTime=`cat ${lastTimeFile}`
+  diffTime=$[${time}-${lastTime}]
+  if test ${diffTime} -gt 0 && test ${diffTime} -lt 10; then
+    if test -f ${secondLastTimeFile}; then
+      secondLastTime=`cat ${secondLastTimeFile}`
+      secondDiffTime=$[${lastTime}-${secondLastTime}]
+      if test ${secondDiffTime} -gt 0 && test ${secondDiffTime} -lt 10; then
+        stop=1
+      fi
+    fi
+  fi
+
+  # Shift last timestamp to second last timestamp
+  echo ${lastTime} > ${secondLastTimeFile}
+fi
+
+# Record time for next call
+echo ${time} > ${lastTimeFile}
+
+if test ${stop} -eq 1; then
+  echo "WARNING: A potential problem was detected. $0 was also called ${diffTime} seconds ago, and another time ${secondDiffTime} seconds before that which is too often. Will *not* execute this script for security reasons (overloading 'at' daemon etc, mail server, ...)."
+  exit
+fi
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Variables and settings
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+this=$0
+if test ${this} = ""; then
+  echo "INTERNAL ERROR: First argument to JobSlave is empty."
+fi
+
+if test "${HOSTNAME}" = ""; then
+  HOSTNAME=${HOST}
+  if test "${HOSTNAME}" = ""; then
+    HOSTNAME=`uname -n`
+  fi
+fi
+
+# The shell 'at' should run the job in.
+SHELL="/usr/bin/env bash"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Option values
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+atQueueId=a
+debug=0
+interval=10
+JOBPATTERN=
+patternfile=${HOME}/.jobs/JOBPATTERN
+script=JobStarter
+run=0
+verbose=1
+
+# Miscellaneous
+jobSlaveOpts=
+
+# Create a host and user specific log-file
+# logfile=${HOME}/jobs/.JobSlave.${HOSTNAME}.${USER}.log
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Local functions
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function usage {
+#  thisfile=`type -p $0`;
+  grep "\#\# " ${this} | head -4 | cut -c4-;
+  echo "Please run '`basename ${this}` -help' to see more detailed information."
+} 
+
+function help {
+#  thisfile=`type -p $0`;
+  grep "\#\# " ${this} | cut -c4-;
+}
+
+function verbose {
+  if test "${verbose}" != "0"; then
+    echo "$*"
+  fi
+}
+
+function error {
+  # Hmm, how to write/echo to stderr?!? Found this discussion
+  # http://unix.derkeiler.com/Mailing-Lists/AIX-L/2003-08/0190.html
+  /usr/bin/env ksh -c "exec 1>&2; echo '$*'"
+  exit
+}
+
+function debug {
+  if test "${debug}" != "0"; then
+    # Hmm, how to write/echo to stderr?!? Found this discussion
+    # http://unix.derkeiler.com/Mailing-Lists/AIX-L/2003-08/0190.html
+    /usr/bin/env ksh -c "exec 1>&2; echo '$*'"
+  fi
+}
+
+function updateJobPattern {
+  debug "updateJobPattern()"
+
+  # Trim value
+  JOBPATTERN=`echo ${JOBPATTERN}`
+  if test "${JOBPATTERN}" = ""; then
+    if test -f "${patternfile}"; then
+      debug "Reads job pattern from file: ${patternfile}"
+      JOBPATTERN=`cut -d# -f1 ${patternfile}`
+    fi
+  fi
+
+  # Trim value
+  JOBPATTERN=`echo ${JOBPATTERN}`
+  # Finally, if nothing is given, use default value
+  if test "${JOBPATTERN}" = ""; then
+    JOBPATTERN=JobStarter
+  fi
+
+  debug "JOBPATTERN=${JOBPATTERN}"
+}
+
+function showDetails {
+  debug "showDetails()"
+  assertAt
+
+  echo Host: ${HOSTNAME}
+
+  showOwner
+
+  schedule=`showQueued`
+  if test "${schedule}" = ""; then
+    echo "No tasks are queued."
+  else
+    echo "Queued tasks:"
+    showQueued
+  fi
+
+  running=`showRunningJobs`
+  if test "${running}" = ""; then
+    echo "No jobs are running."
+  else
+    echo "Running `showNumberOfJobs` job(s):"
+    showRunningJobs
+  fi
+}
+
+function showRunningJobs { 
+  debug "showRunningJobs()"
+  # Get the correct job pattern.
+  updateJobPattern
+
+  pgrep -u ${USER} -l -f "${JOBPATTERN}([ ]|$)" | grep -v pgrep | grep -v ${this} | grep -v JobMaster | grep -v JobSlave
+}
+
+function showNumberOfJobs {
+  debug "showNumberOfJobs()"
+  # The current number of running jobs
+  echo `showRunningJobs | wc -l | sed -e "s/ *//"`
+}
+
+function showQueued {
+  debug "showQueued()"
+  assertAt
+  at -l -q ${atQueueId}
+}
+
+function showTop {
+  debug "showTop()"
+  BASH_OSTYPE=`uname -s`
+  case ${BASH_OSTYPE} in
+    Linux)
+      top -b -n 0 > /tmp/top.txt
+      ;;
+    SunOS)
+      top -b 30 > /tmp/top.txt
+      ;;
+    CYGWIN_NT-5.1)
+      top -b -n 0 > /tmp/top.txt
+      ;;
+    *)
+      ;;
+  esac 
+
+  grep -v root /tmp/top.txt | grep -v smmsp | grep -v postfix | grep -v lpd | grep -v ntpd | grep -v atd | grep -v portmap | grep -v daemon | grep -v "${USER}.*grep" | grep -v "${USER}.*bash" | grep -v "${USER}.*top" | grep -v "${USER}.*ssh"
+}
+
+function showOwner {
+  debug "showOwner()"
+
+  # Gets the owner of this host by looking at 'who'
+  owner=`getOwner`
+
+  if test -n "${owner}"; then
+    # Gets the maximum recent %CPU load the user had.
+    ownerLoad=`getOwnerLoad`
+    verbose "The owner ${owner} is currently logged on at the console of ${HOSTNAME}. The maximum recent CPU load (of the last CPU) of this user is ${ownerLoad}%."
+  else
+    verbose "No owner is logged on at the console of ${HOSTNAME}."
+  fi
+}
+
+
+function getOwner {
+  debug "getOwner()"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Predefined owners?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if test "${HOSTNAME}" == "markov"; then
+    owner="azra"
+  else
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Gets the owner of this host by looking at 'who'
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    owner=`who | grep console | cut -d' ' -f1`
+    owner=`echo ${owner}`
+  fi
+  echo ${owner}
+}
+
+function getSlaveRules {
+  debug "getSlaveRules()"
+
+  # Get rules file of this host
+  rulesFile=${HOME}/.jobs/SLAVES-RULES/${HOSTNAME}
+  if test -f "${rulesFile}"; then
+    rules=`cat ${rulesFile}`
+    rules=`echo ${rules}`
+  else
+    # Default rules
+    rules=""
+  fi
+
+  echo ${rules}
+}
+
+
+function getOwnerLoad {
+  debug "getOwnerLoad()"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if test "$1" == "-round"; then
+    round=1
+  else
+    round=0
+  fi
+
+
+  # Gets the owner of this host by looking at 'who'
+  owner=`getOwner`
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Multi-CPU host?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if test "${HOSTNAME}" == "markov"; then
+    nbrOfCPUs=4
+  else
+    nbrOfCPUs=1
+  fi
+
+  if test -n "${owner}"; then
+    # Gets the (floor) of maximum recent %CPU load the user had.
+    ownerLoad=`ps -U ${owner} -o pcpu | grep -v "%CPU" | sort -r | head -${nbrOfCPUs} | tail -1`
+    if test "${round}" == "1"; then
+      ownerLoad=${ownerLoad/[.]*/}
+    fi
+  else
+    ownerLoad=-1
+  fi
+
+  echo ${ownerLoad}
+}
+
+
+function requeueAll {
+  # Remove all queued jobs temporarily
+  unqueueAll -quiet
+
+  # Check if the owner of the slave has created a stop file
+  stopFile=`checkStopFile`
+  if test "${stopFile}" != "0"; then
+    # Unqueue everything, stop everything, and finally kill anything...
+    verbose=2
+    verbose "Detected a stop file for owner ${owner}"
+    stopAll
+    killAll
+    exit
+  fi
+
+  # Get rules for this slave
+  rules=`getSlaveRules`
+
+  # Run this job controller once in a while
+  debug "Options passed recursively: ${jobSlaveOpts}"
+  echo "${this} ${jobSlaveOpts} -start" | at -q ${atQueueId} now+${interval}min >& /dev/null
+
+  # Add future jobs and tasks (host specific)
+  # Get current weekday and time in format DDD and HHMM, respectively
+  weekday=`date +%u`
+  time=`date +%H%M`
+
+  if test "${rules}" = "Mon-Sun_0205-0155"; then
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Stop (interrupts) the jobs just before 02:00 so they can nicely be 
+    # transfered to interrupted/
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    echo "${this} -quiet -stop" | at -q ${atQueueId} 0157 >& /dev/null
+    echo "${this} ${jobSlaveOpts} -start" | at -q ${atQueueId} 0205 >& /dev/null
+    if test ${time} -gt 0150 && test ${time} -lt 0204; then
+      verbose "Detected a lab computer (${HOSTNAME}) and its just before 02:00. Will stop all jobs."
+      run=0
+      stopAll
+    fi
+  elif test "${rules}" = "Mon-Sun_0-24"; then
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Run all day around
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    verbose "Detected a safe computer (${HOSTNAME}). Will run like h..."
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Run JobMaster -start on master computer @ 02:08 just in case the mcNN
+    # computers does not start. (This seems to been a problem that started
+    # Saturday 2004-07-17). /HB 2004-07-19
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    if test "${HOSTNAME}" = "cochran"; then
+      echo "${HOME}/Rjobs/JobMaster -quiet -start" | at -q ${atQueueId} 0208 >& /dev/null
+    fi
+  elif test "${rules}" = "NightsAndWeekends"; then
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Run at nights and on weekends, that is
+    #  Mon-Fri 19:30-08:00 and 
+    #  Sat-Sun 0-24.
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    verbose "Detected a nights'n'weekend host (${HOSTNAME})."
+    if test ${weekday} -eq 6 || test ${weekday} -eq 7; then
+      verbose "Today is a weekend day, run 0-24."
+      else
+      verbose "Today is a workday, run 19:30-08:00, only."
+      echo "${this} ${jobSlaveOpts} -start" | at -q ${atQueueId} 1930 >& /dev/null
+      echo "${this} -quiet -stop" | at -q ${atQueueId} 0755 >& /dev/null
+      echo "${this} -quiet -kill" | at -q ${atQueueId} 0800 >& /dev/null
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # If office hours right now, do NOT start a new job
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      if test ${time} -gt 0745 && test ${time} -lt 1915; then
+        verbose "Detected office hours. Will not start a new job and running ones are stopped."
+        run=0
+        # ...and stop running ones
+        stopAll
+        # kill in 5 minutes if still running
+        echo "${this} -quiet -kill" | at -q ${atQueueId} now+5min >& /dev/null
+      fi
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Run JobMaster -start on master computer @ 02:08 just in case the mcNN
+    # computers does not start. (This seems to been a problem that started
+    # Saturday 2004-07-17). /HB 2004-07-19
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    if test "${HOSTNAME}" = "cochran"; then
+      echo "${HOME}/Rjobs/JobMaster -start" | at -q ${atQueueId} 0208 >& /dev/null
+    fi
+  else
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Critical/other users computer (be nice)
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    verbose "Detected a personal computer (${HOSTNAME})."
+  
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Queue jobs to start at after office hours and stop before
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    verbose "Scheduled job to start at 19:30 and stop at 08:00."
+    echo "${this} ${jobSlaveOpts} -start" | at -q ${atQueueId} 1930 >& /dev/null
+    echo "${this} -quiet -stop" | at -q ${atQueueId} 0755 >& /dev/null
+    echo "${this} -quiet -kill" | at -q ${atQueueId} 0800 >& /dev/null
+  
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # If office hours right now, do NOT start a new job
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    if test ${time} -gt 0745 && test ${time} -lt 1915; then
+      verbose "Detected office hours. Will not start a new job and running ones are stopped."
+      run=0
+      # ...and stop running ones
+      stopAll
+      # kill in 5 minutes if still running
+      echo "${this} -quiet -kill" | at -q ${atQueueId} now+5min >& /dev/null
+    fi
+  fi
+}
+
+function assertAt {
+  debug "assertAt()"
+  noAt=`/usr/bin/env at >& /tmp/tfa; cat /tmp/tfa; rm /tmp/tfa`
+  noAt=`echo ${noAt} | grep "No such file" | wc -l`
+  noAt=`echo ${noAt}`
+  if test "${noAt}" != "0"; then
+    error "ERROR: Can not schedule jobs. This system does not have 'at' installed."
+    exit
+  fi
+}
+
+function unqueueAll {
+  debug "unqueueAll()"
+
+  assertAt
+
+  if test "${HOSTTYPE}" = "i586-linux" || test "${OSTYPE}" = "linux"; then
+    atrm `atq` >& /dev/null
+  else
+    atrm -a >& /dev/null
+  fi
+
+  if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+    echo "Unqueued everything."
+    showQueued
+  fi
+}
+
+function stopAll {
+  debug "stopAll()"
+
+  # The current number of running jobs
+  njobs=`showNumberOfJobs`
+  if test "${njobs}" == "0"; then
+    exit
+  fi
+
+  # Send SIGINT (Ctrl-C) to process
+  pkill -INT -u ${USER} ${JOBPATTERN} >& /dev/null
+
+  if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+    echo "Stopped jobs nicely (interrupted) using pattern '${JOBPATTERN}'."
+  fi
+
+  if test "`showNumberOfJobs`" != "0"; then
+    if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+      echo "Waiting 5 seconds..."
+    fi
+    sleep 5
+  fi
+
+  if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+    showDetails
+  fi
+}
+
+function killAll {
+  debug "killAll()"
+  # First stop everything nicely...
+  if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+    echo "First ask processes to finish nicely."
+  fi
+  stopAll -quiet
+
+  # ...sleep for 15 seconds to give the process a chance to cleanup
+  if test "`showNumberOfJobs`" != "0"; then
+    if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+      echo "Wait 15 seconds..."
+    fi
+    sleep 15
+  fi
+
+  # ...then kill the processes...
+  if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+    echo "Kills anything that is still running."
+  fi
+  pkill -u ${USER} ${JOBPATTERN} >& /dev/null
+
+  if test "${verbose}" != "0" && test "$1" != "-quiet"; then
+    echo "Killed everything abruptly."
+    showDetails
+  fi
+}
+
+function checkStopFile {
+  res=0
+
+  # Get owner
+  owner=`getOwner`
+
+  if test "${owner}" != ""; then
+    # Check if owner has put a stop file in his/her home directory
+    stopFileA="~${owner}/.hbstop.${owner}";
+    stopFileB="/tmp/.hbstop.${owner}";
+    if test -e "${stopFileA}" || test -e "${stopFileB}"; then
+      res=1
+    fi
+  fi
+
+  echo ${res}
+}
+
+function runNew {
+  # Get rules for this slave
+  rules=`getSlaveRules`
+
+  # Do *not* run scripts if the "owner" of this slave host, that is the 
+  # user logged at to the console, is actively using the computer 
+  # right now. The indication of usage is that her or his maximum recent 
+  # CPU load is above 20%.
+  ownerLoad=`getOwnerLoad -round`
+  if test ${ownerLoad} -ge 20; then
+    owner=`getOwner`
+    verbose "The owner (${owner}) logged on at the console is actively using the computer. Nothing started."
+    run=0
+  fi
+
+  if test "${run}" != "1"; then
+    exit
+  fi
+
+  # The current number of running jobs
+  njobs=`showNumberOfJobs`
+
+  maxNumberOfJobs=1
+
+  if test "${HOSTNAME}" = "markov"; then
+    maxNumberOfJobs=3
+  fi
+
+  if test ${njobs} -ge ${maxNumberOfJobs}; then
+    verbose "Nothing started, because too many jobs are currently running on ${HOSTNAME}: ${njobs} >= ${maxNumberOfJobs}"
+    exit
+  fi
+
+  # No jobs are running. Start!
+  verbose "Starting new job nicely: 'nice nohup ${script} &'"
+  echo "nice nohup ${script} &" | at -q ${atQueueId} now >& /dev/null
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Log call to file (when new job is started or rescheduled)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+call="$0 $*"
+
+if ! test -d "${HOME}/.jobs/"; then
+  debug "Created missing log directory: ${HOME}/.jobs/"
+  mkdir "${HOME}/.jobs/"
+fi
+
+echo "${call}" > "${HOME}/.jobs/call.JobSlave.${HOSTNAME}"
+debug "Saved call to log: ${call}"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Parse arguments
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if test -z "$1"; then
+  usage
+  exit
+fi
+
+while test -n "$1"; do 
+  case "$1" in 
+    "-bash")
+      shift
+      command="$1"
+      # Evaluate command
+      bash -c "${command}"
+      ;;
+    "-debug")
+      debug=1
+      ;;
+    "-details")
+      showDetails
+      ;;
+    "-help"|"--help")
+      help                                     # Calls the help() function
+      exit;
+      ;; 
+    "-interval")
+      shift
+      interval=$1
+      # Test if the value actual is an integer, otherwise an error
+      # will be generated; better here than later.
+      if test ${interval} -lt 1; then
+        error "Interval between jobs must be 1 or greater: ${interval}"
+      fi
+      # Pass option to future calls too
+      jobSlaveOpts="${jobSlaveOpts} -interval ${interval}"
+      debug "Jobs are queued every ${interval} minutes."
+      ;;
+    "-host")
+      echo ${HOSTNAME}
+      ;;
+    "-jobs")
+      showRunningJobs
+      ;;
+    "-njobs")
+      showNumberOfJobs
+      ;;
+    "-owner")
+      showOwner
+      ;;
+    "-patternfile")
+      shift
+      # Option overrides previos settings.
+      JOBPATTERN=""
+      patternfile="$1"
+      # Pass option to future calls too
+      jobSlaveOpts="${jobSlaveOpts} -patternfile \"${patternfile}\""
+      updateJobPattern
+      ;;
+    "-pattern")
+      shift
+      # Option overrides previos settings.
+      JOBPATTERN=$1
+      # Pass option to future calls too
+      jobSlaveOpts="${jobSlaveOpts} -pattern \"${JOBPATTERN}\""
+      ;;
+    "-kill")
+      killAll
+      ;;
+    "-queued")
+      showQueued
+      ;;
+    "-queue")
+      shift
+      atQueueId=$1
+      nchars=`echo "${atQueueId}" | wc -c`  # Returns one to many, but why?
+      nchars=`echo ${nchars}`                                        # trim
+      if test "${nchars}" != "2"; then
+        error "Value of option -queue can must be a single character: ${atQueueId}"
+      fi
+      ttt=`echo "${atQueueId//[a-zA-Z]/}"`
+      if test "${ttt}" != ""; then
+        error "Value of option -queue can only be one character of a-z or A-Z: ${atQueueId}"
+      fi
+      # Pass option to future calls too
+      jobSlaveOpts="${jobSlaveOpts} -queue \"${atQueueId}\""
+      ;;
+    "-quiet")
+      verbose=0
+      ;;
+    "-rules")
+      getSlaveRules
+      ;;
+    "-script")
+      shift
+      script=$1
+      # Pass option to future calls too
+      jobSlaveOpts="${jobSlaveOpts} -script \"${script}\""
+      debug "Job script is \"${script}\"."
+      ;;
+    "-start")
+      if test "${verbose}" = "1"; then
+        verbose=0
+      fi
+      run=1
+      requeueAll
+      runNew
+      ;;
+    "-stopfile")
+      checkStopFile
+      ;;
+    "-stop")
+      unqueueAll
+      stopAll
+      ;;
+    "-top")
+      showTop
+      ;;
+    "-unqueue")
+      unqueueAll
+      ;;
+    "-verbose")
+      verbose=2
+      ;;
+    *)
+      echo "Unknown argument to `basename ${this}`: $1"
+      echo
+      help
+      exit
+      ;;
+  esac 
+  shift
+done
+
+
+###########################################################################
+# HISTORY:
+# 2004-07-31
+# o Added -quiet to the job masters nightly slave restart.
+# o Added support for the owner of a host to stop the slave by creating
+#   a stop file /tmp/.hbstop.$USER.
+# o Added rules, which for now are just simple hard coded rule labels, but
+#   still.
+# 2004-07-30
+# o Added the possibility to run more jobs than one per machine, although
+#   I have not made it available as an option yet. This should be machine
+#   and user specific, somehow.
+# 2004-07-24
+# o Added nbrOfCPUs to getOwnerLoad. 
+# 2004-07-22
+# o Forgot a -quiet when -stop:ping lab computers at 01:57. Generated 
+#   emails.
+# o -kill does probably not wait long enough for -stop to finish up, only
+#   5 seconds. This made a lot of processes to die and leave garbage in the
+#   "running" directory. Now, I instead order a -stop then 5 minutes later
+#   a -kill.
+# 2004-07-21
+# o Now -details also include -owner.
+# 2004-07-20
+# o Added option -top.
+# o A new job will not be started if the CPU usage by the owner is 
+#   above 20%. Note though that running jobs continue to run until done.
+#   The CPU usage of other non-console users are not considered.
+# o Added option -owner to get information about the owner and his or her
+#   recent maximum CPU usage.
+# 2004-07-19
+# o Now a master host is running JobMaster -start at 02:08 in order to 
+#   assure that the mcNN computers are restarted after nightly process
+#   cleanup.
+# 2004-07-18
+# o Now append (at the end) option -start explicitly whereever scheduling
+#   a restart.
+# o Added -quiet to unqueueAll in requeueAll.
+# 2004-07-15
+# o Updated the protection below to check the times of the last *three*
+#   calls. If only checking twice a manual call, say JobMaster -details,
+#   just seconds before the scheduled jobs, would prevent the latter from
+#   being executed and therefore prevent it to reschedule itself; the
+#   slave would be lost.
+# 2004-07-14
+# o Added a protection against malfunctioning 'at' calls which would call
+#   this script too often.
+# 2004-07-12
+# o Added option -command, which is useful for JobMaster, e.g.
+#   JobMaster -command "top"
+# 2004-07-10
+# o Clean up code further. Now the main code is the while loop processing
+#   the arguments on at the time.
+# o BUG FIX: Forgot to specify -kill twice, but that is actually annoying
+#   so I changed it so once is enough.
+# 2004-07-09
+# o Major update of script. Added several options: -stop, -script, etc.
+# o Now using #!/usr/bin/env bash
+# 2004-07-08
+# o Now sensitive to office hours.
+# o Now starting to make use of bash instead so that the 'at' jobs do not
+#   send email message after each run (this was because they were running
+#   in tcsh[==bad for 'at' etc] before).
+# 2004-07-07
+# o Added an immediate restart when R finishes. 
+# 2004-06-13
+# o 'at -m' (mail when done) only for the actual job and *no* other 'at':s.
+# o at, atq, pkill, pgrep works slitely different on Solaris and Suse.
+#   Still have to find a better way to identify running jobs; now I
+#   only look for R.bin.
+# o Made it check back every hour to see if it has to be restarted.
+# 2004-06-12
+# o Created.
+###########################################################################

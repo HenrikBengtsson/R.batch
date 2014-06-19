@@ -1,0 +1,196 @@
+#!/usr/bin/env bash
+###########################################################################
+## JobMaster v0.3 by Henrik Bengtsson, 2004.
+## 
+## Usage: JobMaster [options] [slave options]
+## 
+## Options:
+##  -help        This page.
+##  -list        Lists slaves.
+##  -progress    Show progress of all slaves.
+##  -slave       Add slave to known slaves. Has to be specified *after*
+##               -slaves to be effective if both are given.
+##  -slaves      Specify slave hosts. To give several hosts at once, put
+##               them within quotation marks seperated by spaces. If not
+##               specified, environment variable SLAVES is used. If that
+##               is not set, the slaves file is used.
+##  -slavespath  Specify directory *or* file containing names of slave
+##               hosts. If a directory, the files names in that directory
+##               specifies the names. If a file, anything on a row
+##               following a '#' is a comment and ignored. Default path
+##               is ${HOME}/.jobs/SLAVES.
+##  -sort        Sort list of slaves before calling.
+##  -unique      Make list of slaves unique (include -sort).
+## For slave options, see JobSlave --help. 
+##
+## Logins on each slave and calls JobSlave with given slave options.
+## 
+## Example:
+## Show details for slaves mc01 and mc02:
+##  JobMaster -slaves "mc01 mc02" -details
+## Start 'date' recording once an hour on the default slave hosts
+##  JobMaster -start -interval 60 -script "date > ${HOME}/.date"
+## Stop all running processes and remove all scheduled jobs on the slaves
+##  JobMaster -stop 
+## 
+###########################################################################
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Variables
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+jobSlaveOpts=
+
+this=$0
+if test ${this} = ""; then
+  echo "INTERNAL ERROR: First argument to JobMaster is empty."
+fi
+
+slavespath=${HOME}/.jobs/SLAVES
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Local functions
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function usage {
+#  thisfile=`type -p $0`;
+  grep "\#\# " ${this} | head -4 | cut -c4-;
+  echo "Please run '`basename ${this}` -help' to see more detailed information."
+} 
+
+function help {
+#  thisfile=`type -p $0`;
+  grep "\#\# " ${this} | cut -c4-;
+}
+
+function verbose {
+  if test "${verbose}" != "0"; then
+    echo "$*"
+  fi
+}
+
+function error {
+  # Hmm, how to write/echo to stderr?!? Found this discussion
+  # http://unix.derkeiler.com/Mailing-Lists/AIX-L/2003-08/0190.html
+  /usr/bin/env ksh -c "exec 1>&2; echo '$*'"
+  exit
+}
+
+function debug {
+  if test "${debug}" != "0"; then
+    # Hmm, how to write/echo to stderr?!? Found this discussion
+    # http://unix.derkeiler.com/Mailing-Lists/AIX-L/2003-08/0190.html
+    /usr/bin/env ksh -c "exec 1>&2; echo '$*'"
+  fi
+}
+
+function updateSlaves {
+  # Trim value
+  SLAVES=`echo ${SLAVES}`
+  if test "${SLAVES}" = ""; then
+    if test -d "${slavespath}"; then
+      SLAVES=`ls ${slavespath} | grep -i "^[a-z0-9]*$"`
+    elif test -f "${slavespath}"; then
+      SLAVES=`cut -d# -f1 ${slavespath}`
+    fi
+  fi
+  # Trim value
+  SLAVES=`echo ${SLAVES}`
+}
+
+function showSlaves {
+  updateSlaves
+  echo ${SLAVES}
+}
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Parse arguments
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if test -z "$1"; then
+  usage
+  exit
+fi
+
+while test -n "$1"; do 
+  case "$1" in 
+    "-help"|"--help")
+      help                                     # Calls the help() function
+      exit
+      ;; 
+    "-list")
+      showSlaves
+      ;;
+    "-progress")
+      BASH_OSTYPE=`uname -s`
+      case ${BASH_OSTYPE} in
+        "SunOS") ssh mc03 -C "~/.jobs/bin/progress" ;;
+        *) ~/.jobs/bin/progress ;;
+      esac
+      ;;
+    "-slavespath")
+      shift
+      # Option overrides previos settings.
+      SLAVES=""
+      slavespath="$1"
+      updateSlaves
+      ;;
+    "-slaves")
+      shift
+      # Option overrides previos settings.
+      SLAVES="$1"
+      ;;
+    "-slave")
+      shift
+      SLAVES="${SLAVES} $1"
+      ;;
+    "-sort")
+      SLAVES=`for s in ${SLAVES}; do echo ${s}; done | sort`
+      ;;
+    "-unique")
+      SLAVES=`for s in ${SLAVES}; do echo ${s}; done | sort -u`
+      ;;
+    *)
+      jobSlaveOpts="${jobSlaveOpts} $1"
+      ;;
+  esac 
+  shift
+done
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validate arguments
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Trim variable jobSlaveOpts
+jobSlaveOpts=`echo ${jobSlaveOpts}`
+
+# Assert that slave options are given.
+if test "${jobSlaveOpts}" = ""; then
+  error "No options to JobSlave are given. Nothing to do."
+fi
+
+updateSlaves
+
+# Assert that slave hosts are given.
+if test "${SLAVES}" = ""; then
+  error "No slaves specified."
+fi
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Call each slave
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+echo "Calling slave hosts: ${SLAVES}"
+echo "Command: JobSlave ${jobSlaveOpts}"
+echo
+for slave in ${SLAVES}; do
+  echo "Slave ${slave}:"
+  ssh ${slave} -C "JobSlave ${jobSlaveOpts}"
+  echo
+done
+
+
+
+###########################################################################
+# HISTORY:
+# 2004-07-31
+# o Added argument -progress.
+# o Added support for SLAVES *directory* with filenames equal to slave
+#   hosts.
+# 2004-07-09
+# o Created.
+###########################################################################
